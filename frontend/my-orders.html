@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Friends Corporation - My Orders</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .header-button {
+      text-decoration: none;
+      background: #0b7a3b;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .order-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+    }
+
+    .order-id {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .order-date {
+      color: #777;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .status {
+      padding: 7px 12px;
+      border-radius: 20px;
+      background: #fff3cd;
+      color: #856404;
+      font-size: 13px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .status.confirmed {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .status.processing {
+      background: #cfe2ff;
+      color: #084298;
+    }
+
+    .status.out_for_delivery {
+      background: #e2d9f3;
+      color: #59359a;
+    }
+
+    .status.delivered {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .status.cancelled {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .order-info {
+      margin-top: 15px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f2f2f2;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #666;
+    }
+
+    .info-value {
+      font-weight: bold;
+      text-align: right;
+      max-width: 60%;
+      word-break: break-word;
+    }
+
+    .order-actions {
+      margin-top: 18px;
+    }
+
+    .details-button {
+      display: inline-block;
+      text-decoration: none;
+      background: #0b7a3b;
+      color: white;
+      padding: 11px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+    }
+
+    .details-button:hover {
+      background: #075b2d;
+    }
+
+    .loading {
+      background: white;
+      padding: 40px;
+      text-align: center;
+      border-radius: 12px;
+    }
+
+    .empty {
+      background: white;
+      padding: 40px 20px;
+      text-align: center;
+      border-radius: 12px;
+    }
+
+    .empty a {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
+      background: #0b7a3b;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .logo {
+        text-align: center;
+      }
+
+      .buttons {
+        justify-content: center;
+      }
+
+      .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .info-value {
+        text-align: left;
+        max-width: 100%;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+<header>
+  <div class="header-content">
+
+```
+<div class="logo">
+  Friends Corporation
+</div>
+
+<div class="buttons">
+
+  <a href="index.html" class="header-button">
+    🛒 Shopping
+  </a>
+
+  <a href="cart.html" class="header-button">
+    🛍️ Cart
+  </a>
+
+</div>
+```
+
+  </div>
+</header>
+
+<main class="container">
+
+  <h1>
+    📦 আমার Orders
+  </h1>
+
+  <div id="ordersContainer">
+
+```
+<div class="loading">
+  Orders লোড হচ্ছে...
+</div>
+```
+
+  </div>
+
+</main>
+
+<script>
+
+  const API_URL =
+    "http://localhost:5000/api/customer-orders";
+
+
+  const token =
+    localStorage.getItem("customer_token");
+
+
+  console.log(
+    "CUSTOMER TOKEN:",
+    token ? "TOKEN FOUND" : "NO TOKEN"
+  );
+
+
+  if (!token) {
+
+    document.getElementById(
+      "ordersContainer"
+    ).innerHTML = `
+
+      <div class="empty">
+
+        <h2>
+          Customer Login প্রয়োজন
+        </h2>
+
+        <p>
+          আপনার Orders দেখতে আগে Login করুন।
+        </p>
+
+        <a href="customer-login.html">
+          Login করুন
+        </a>
+
+      </div>
+
+    `;
+
+  } else {
+
+    loadOrders();
+
+  }
+
+
+  async function loadOrders() {
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL,
+          {
+            method: "GET",
+
+            headers: {
+              "Authorization":
+                "Bearer " + token,
+
+              "Content-Type":
+                "application/json"
+            }
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      console.log(
+        "ORDERS RESPONSE:",
+        data
+      );
+
+
+      if (
+        response.status === 401 ||
+        response.status === 403
+      ) {
+
+        localStorage.removeItem(
+          "customer_token"
+        );
+
+        document.getElementById(
+          "ordersContainer"
+        ).innerHTML = `
+
+          <div class="empty">
+
+            <h2>
+              Login Session শেষ হয়েছে
+            </h2>
+
+            <p>
+              আবার Login করুন।
+            </p>
+
+            <a href="customer-login.html">
+              Login করুন
+            </a>
+
+          </div>
+
+        `;
+
+        return;
+      }
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Orders load failed"
+        );
+
+      }
+
+
+      let orders = data;
+
+
+      if (
+        data &&
+        Array.isArray(data.orders)
+      ) {
+
+        orders = data.orders;
+
+      }
+
+
+      if (
+        data &&
+        Array.isArray(data.data)
+      ) {
+
+        orders = data.data;
+
+      }
+
+
+      displayOrders(orders);
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "ORDERS ERROR:",
+        error
+      );
+
+
+      document.getElementById(
+        "ordersContainer"
+      ).innerHTML = `
+
+        <div class="error">
+
+          <h3>
+            ⚠️ Orders লোড করা যাচ্ছে না
+          </h3>
+
+          <p>
+            ${escapeHTML(error.message)}
+          </p>
+
+          <p>
+            Backend Server চালু আছে কিনা দেখুন।
+          </p>
+
+        </div>
+
+      `;
+
+    }
+
+  }
+
+
+  function displayOrders(orders) {
+
+    const container =
+      document.getElementById(
+        "ordersContainer"
+      );
+
+
+    if (
+      !Array.isArray(orders) ||
+      orders.length === 0
+    ) {
+
+      container.innerHTML = `
+
+        <div class="empty">
+
+          <h2>
+            এখনো কোনো Order নেই
+          </h2>
+
+          <p>
+            Shopping Page থেকে আপনার প্রথম Order করুন।
+          </p>
+
+          <a href="index.html">
+            Shopping শুরু করুন
+          </a>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      orders.map(order => {
+
+
+        /*
+        =====================================
+        ORDER ID বের করা
+        =====================================
+        */
+
+        const orderId =
+          order.id ??
+          order.order_id ??
+          order.orderId ??
+          order.ID;
+
+
+        console.log(
+          "ORDER:",
+          order
+        );
+
+
+        console.log(
+          "ORDER ID:",
+          orderId
+        );
+
+
+        if (
+          orderId === undefined ||
+          orderId === null ||
+          orderId === ""
+        ) {
+
+          return `
+
+            <div class="order-card">
+
+              <div class="error">
+
+                এই Order-এর ID পাওয়া যাচ্ছে না।
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+
+
+        const total =
+          Number(
+            order.total_amount
+          ) || 0;
+
+
+        const delivery =
+          Number(
+            order.delivery_charge
+          ) || 0;
+
+
+        const grandTotal =
+          total + delivery;
+
+
+        return `
+
+          <div class="order-card">
+
+            <div class="order-header">
+
+              <div>
+
+                <div class="order-id">
+
+                  Order #
+                  ${escapeHTML(String(orderId))}
+
+                </div>
+
+                <div class="order-date">
+
+                  ${formatDate(
+                    order.created_at
+                  )}
+
+                </div>
+
+              </div>
+
+
+              <div
+                class="status ${
+                  escapeHTML(
+                    order.order_status || ""
+                  )
+                }"
+              >
+
+                ${formatStatus(
+                  order.order_status
+                )}
+
+              </div>
+
+            </div>
+
+
+            <div class="order-info">
+
+
+              <div class="info-row">
+
+                <span class="info-label">
+                  পণ্যের মূল্য
+                </span>
+
+                <span class="info-value">
+                  ৳${total.toFixed(2)}
+                </span>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span class="info-label">
+                  Delivery Charge
+                </span>
+
+                <span class="info-value">
+                  ৳${delivery.toFixed(2)}
+                </span>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span class="info-label">
+                  সর্বমোট
+                </span>
+
+                <span class="info-value">
+                  ৳${grandTotal.toFixed(2)}
+                </span>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span class="info-label">
+                  Payment
+                </span>
+
+                <span class="info-value">
+                  ${formatPayment(
+                    order.payment_method
+                  )}
+                </span>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span class="info-label">
+                  Payment Status
+                </span>
+
+                <span class="info-value">
+                  ${formatPaymentStatus(
+                    order.payment_status
+                  )}
+                </span>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span class="info-label">
+                  Delivery Address
+                </span>
+
+                <span class="info-value">
+
+                  ${escapeHTML(
+                    order.delivery_address || "-"
+                  )}
+
+                </span>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span class="info-label">
+                  Customer Phone
+                </span>
+
+                <span class="info-value">
+
+                  ${escapeHTML(
+                    order.customer_phone ||
+                    order.phone ||
+                    "-"
+                  )}
+
+                </span>
+
+              </div>
+
+
+            </div>
+
+
+            <div class="order-actions">
+
+              <button
+                type="button"
+                class="details-button"
+                onclick="openOrderDetails('${escapeJS(String(orderId))}')"
+              >
+
+                👀 Order Details
+
+              </button>
+
+            </div>
+
+
+          </div>
+
+        `;
+
+      }).join("");
+
+  }
+
+
+  /*
+  =====================================
+  সবচেয়ে গুরুত্বপূর্ণ FUNCTION
+  =====================================
+  */
+
+  function openOrderDetails(orderId) {
+
+    console.log(
+      "OPENING ORDER DETAILS:",
+      orderId
+    );
+
+
+    if (
+      orderId === undefined ||
+      orderId === null ||
+      orderId === ""
+    ) {
+
+      alert(
+        "Order ID পাওয়া যায়নি।"
+      );
+
+      return;
+
+    }
+
+
+    const url =
+      "order-details.html?id=" +
+      encodeURIComponent(
+        String(orderId)
+      );
+
+
+    console.log(
+      "GOING TO:",
+      url
+    );
+
+
+    window.location.href = url;
+
+  }
+
+
+  function formatStatus(status) {
+
+    const statusMap = {
+
+      pending:
+        "অপেক্ষমান",
+
+      confirmed:
+        "নিশ্চিত হয়েছে",
+
+      processing:
+        "প্রস্তুত হচ্ছে",
+
+      out_for_delivery:
+        "Delivery-এর পথে",
+
+      delivered:
+        "Delivered",
+
+      cancelled:
+        "Cancelled"
+
+    };
+
+
+    return (
+      statusMap[status] ||
+      status ||
+      "Unknown"
+    );
+
+  }
+
+
+  function formatPayment(method) {
+
+    if (
+      method === "cash_on_delivery"
+    ) {
+
+      return "Cash on Delivery";
+
+    }
+
+
+    if (
+      method === "online"
+    ) {
+
+      return "Online Payment";
+
+    }
+
+
+    return method || "-";
+
+  }
+
+
+  function formatPaymentStatus(status) {
+
+    const statusMap = {
+
+      pending:
+        "Pending",
+
+      paid:
+        "Paid",
+
+      failed:
+        "Failed"
+
+    };
+
+
+    return (
+      statusMap[status] ||
+      status ||
+      "-"
+    );
+
+  }
+
+
+  function formatDate(value) {
+
+    if (!value) {
+
+      return "-";
+
+    }
+
+
+    const date =
+      new Date(value);
+
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
+      return value;
+
+    }
+
+
+    return date.toLocaleString(
+      "bn-BD",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+      }
+    );
+
+  }
+
+
+  function escapeHTML(value) {
+
+    return String(value)
+
+      .replace(/&/g, "&amp;")
+
+      .replace(/</g, "&lt;")
+
+      .replace(/>/g, "&gt;")
+
+      .replace(/"/g, "&quot;")
+
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  function escapeJS(value) {
+
+    return String(value)
+
+      .replace(/\\/g, "\\\\")
+
+      .replace(/'/g, "\\'")
+
+      .replace(/"/g, '\\"')
+
+      .replace(/\r/g, "\\r")
+
+      .replace(/\n/g, "\\n");
+
+  }
+function openOrderDetails(orderId) {
+
+  console.log("Opening Order ID:", orderId);
+
+  if (!orderId) {
+    alert("Order ID পাওয়া যায়নি।");
+    return;
+  }
+
+  const url =
+    "order-details.html?id=" +
+    encodeURIComponent(String(orderId));
+
+  console.log("Opening URL:", url);
+
+  window.location.href = url;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Employee Login - Friends Corporation</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      width: 380px;
+      max-width: 92%;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      color: #222;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #777;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #0b7a3b;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #075c2d;
+    }
+
+    #message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="login-box">
+
+<h1>Friends Corporation</h1>
+
+<div class="subtitle">
+  Employee Login
+</div>
+
+<form id="loginForm">
+
+  <label>Phone Number</label>
+
+  <input
+    type="text"
+    id="phone"
+    placeholder="Employee Phone Number"
+    required
+  >
+
+  <label>Password</label>
+
+  <input
+    type="password"
+    id="password"
+    placeholder="Password"
+    required
+  >
+
+  <button type="submit">
+    Login
+  </button>
+
+</form>
+
+<div id="message"></div>
+
+  </div>
+
+  <script>
+
+    const API_URL = "http://localhost:5000";
+
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const phone =
+          document.getElementById("phone").value.trim();
+
+        const password =
+          document.getElementById("password").value;
+
+        const message =
+          document.getElementById("message");
+
+        message.style.color = "black";
+        message.innerText = "Login হচ্ছে...";
+
+        try {
+const response = await fetch(
+  API_URL + "/api/employees/login",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      phone: phone,
+      password: password
+    })
+  }
+);
+          const data = await response.json();
+
+          if (!response.ok) {
+
+            message.style.color = "red";
+
+            message.innerText =
+              data.message || "Login failed";
+
+            return;
+          }
+
+          // Employee token save
+          localStorage.setItem(
+            "employee_token",
+            data.token
+          );
+
+          // Employee information save
+          localStorage.setItem(
+            "employee",
+            JSON.stringify(data.employee)
+          );
+
+          message.style.color = "green";
+
+          message.innerText =
+            "Login successful!";
+
+          setTimeout(function() {
+
+            window.location.href =
+  "/employee-dashboard";
+
+          }, 800);
+
+        } catch (error) {
+
+          console.error(
+            "LOGIN ERROR:",
+            error
+          );
+
+          message.style.color = "red";
+
+          message.innerText =
+            "Server connection failed";
+        }
+      });
+  </script>
+</body>
+</html>

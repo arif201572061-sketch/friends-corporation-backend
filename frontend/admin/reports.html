@@ -1,0 +1,3012 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Friends Corporation - হিসাব ও রিপোর্ট</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      color: #222;
+    }
+
+    .header {
+      background: #0d6efd;
+      color: white;
+      padding: 18px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .role-badge {
+      background: rgba(255,255,255,0.18);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .btn {
+      border: none;
+      padding: 10px 15px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .btn-dashboard {
+      background: white;
+      color: #0d6efd;
+    }
+
+    .btn-logout {
+      background: #dc3545;
+      color: white;
+    }
+
+    .container {
+      max-width: 1450px;
+      margin: 25px auto;
+      padding: 0 18px;
+    }
+
+    .page-title {
+      margin-bottom: 20px;
+    }
+
+    .page-title h2 {
+      margin: 0 0 7px;
+      font-size: 25px;
+    }
+
+    .page-title p {
+      margin: 0;
+      color: #666;
+    }
+
+    /* REPORT TYPES */
+
+    .report-types {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .report-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: 0.2s;
+    }
+
+    .report-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .report-card.active {
+      border-color: #0d6efd;
+      background: #f0f6ff;
+    }
+
+    .report-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .report-card h3 {
+      margin: 0 0 7px;
+    }
+
+    .report-card p {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* FILTER */
+
+    .filter-box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .filter-box h3 {
+      margin-top: 0;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 14px;
+      background: white;
+    }
+
+    .filter-actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-generate {
+      background: #198754;
+      color: white;
+    }
+
+    .btn-reset {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-print {
+      background: #6610f2;
+      color: white;
+    }
+
+    /* COLUMNS */
+
+    .columns-box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .columns-box h3 {
+      margin-top: 0;
+    }
+
+    .column-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: none;
+      padding: 7px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #e9ecef;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .checkbox-item {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      padding: 9px;
+      font-size: 14px;
+    }
+
+    .checkbox-item input {
+      margin-right: 7px;
+    }
+
+    /* SUMMARY */
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .summary-card {
+      background: white;
+      padding: 18px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .summary-card .label {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .summary-card .value {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    /* TABLE */
+
+    .table-box {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .table-header h3 {
+      margin: 0;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th,
+    td {
+      padding: 11px 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f8f9fa;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tr:hover td {
+      background: #fafafa;
+    }
+
+    .empty {
+      padding: 45px 20px;
+      text-align: center;
+      color: #777;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .message.success {
+      display: block;
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .message.error {
+      display: block;
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .message.info {
+      display: block;
+      background: #cff4fc;
+      color: #055160;
+    }
+
+    /* PRINT */
+
+    @media print {
+
+      body {
+        background: white;
+      }
+
+      .header,
+      .report-types,
+      .filter-box,
+      .columns-box,
+      .filter-actions,
+      .message,
+      .table-header button {
+        display: none !important;
+      }
+
+      .container {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      .summary-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+
+      .table-box {
+        box-shadow: none;
+      }
+
+      table {
+        min-width: 0;
+      }
+
+      th,
+      td {
+        font-size: 10px;
+      }
+
+      @page {
+        size: landscape;
+        margin: 10mm;
+      }
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1000px) {
+
+      .report-types {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .checkbox-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 650px) {
+
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        padding: 15px;
+      }
+
+      .header h1 {
+        font-size: 18px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="header">
+
+  <h1>
+    Friends Corporation — হিসাব ও রিপোর্ট
+  </h1>
+
+  <div class="header-right">
+
+    <span
+      id="roleBadge"
+      class="role-badge"
+    >
+      যাচাই করা হচ্ছে...
+    </span>
+
+    <button
+      class="btn btn-dashboard"
+      onclick="goDashboard()"
+    >
+      🏠 Dashboard
+    </button>
+
+    <button
+      class="btn btn-logout"
+      onclick="logout()"
+    >
+      Logout
+    </button>
+
+  </div>
+
+</div>
+
+
+<div class="container">
+
+
+<!-- =====================================================
+     PAGE TITLE
+===================================================== -->
+
+<div class="page-title">
+
+  <h2>
+    📊 হিসাব ও রিপোর্ট
+  </h2>
+
+  <p>
+    Sales, Purchase, Profit এবং Stock-এর বিস্তারিত হিসাব দেখুন।
+  </p>
+
+</div>
+
+
+<div
+  id="message"
+  class="message"
+></div>
+
+
+<!-- =====================================================
+     REPORT TYPES
+===================================================== -->
+
+<div class="report-types">
+
+
+  <div
+    id="purchaseCard"
+    class="report-card active"
+    onclick="selectReportType('purchase')"
+  >
+
+    <div class="report-icon">
+      📦
+    </div>
+
+    <h3>
+      Purchase Report
+    </h3>
+
+    <p>
+      কোন তারিখে কোন পণ্য কত পরিমাণ কেনা হয়েছে এবং কত টাকা খরচ হয়েছে।
+    </p>
+
+  </div>
+
+
+  <div
+    id="salesCard"
+    class="report-card"
+    onclick="selectReportType('sales')"
+  >
+
+    <div class="report-icon">
+      🛒
+    </div>
+
+    <h3>
+      Sales Report
+    </h3>
+
+    <p>
+      কোন পণ্য কত বিক্রি হয়েছে, Sales, Purchase Cost এবং Profit।
+    </p>
+
+  </div>
+
+
+  <div
+    id="businessCard"
+    class="report-card"
+    onclick="selectReportType('business')"
+  >
+
+    <div class="report-icon">
+      🏦
+    </div>
+
+    <h3>
+      Business Statement
+    </h3>
+
+    <p>
+      নির্দিষ্ট সময়ের Sales, Purchase এবং Profit-এর সারসংক্ষেপ।
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     FILTER
+===================================================== -->
+
+<div class="filter-box">
+
+  <h3>
+    🔎 Report Filter
+  </h3>
+
+  <div class="filter-grid">
+
+
+    <div class="field">
+
+      <label>
+        From Date
+      </label>
+
+      <input
+        type="date"
+        id="fromDate"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        To Date
+      </label>
+
+      <input
+        type="date"
+        id="toDate"
+      >
+
+    </div>
+
+
+    <div
+      class="field"
+      id="productField"
+    >
+
+      <label>
+        Product
+      </label>
+
+      <select id="productSelect">
+
+        <option value="">
+          সকল পণ্য
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <div class="filter-actions">
+
+    <button
+      class="btn btn-generate"
+      onclick="generateReport()"
+    >
+      📊 Report তৈরি করুন
+    </button>
+
+
+    <button
+      class="btn btn-reset"
+      onclick="resetFilters()"
+    >
+      🔄 Reset
+    </button>
+
+
+    <button
+      class="btn btn-print"
+      onclick="printReport()"
+    >
+      🖨️ Print
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     COLUMN SELECTOR
+===================================================== -->
+
+<div class="columns-box">
+
+  <h3>
+    ☑️ কোন কোন তথ্য রিপোর্টে দেখাবেন?
+  </h3>
+
+  <div class="column-actions">
+
+    <button
+      class="small-btn"
+      onclick="selectAllColumns()"
+    >
+      সব Select
+    </button>
+
+    <button
+      class="small-btn"
+      onclick="unselectAllColumns()"
+    >
+      সব Unselect
+    </button>
+
+  </div>
+
+
+  <div
+    id="columnCheckboxes"
+    class="checkbox-grid"
+  ></div>
+
+</div>
+
+
+<!-- =====================================================
+     SUMMARY
+===================================================== -->
+
+<div class="summary-grid">
+
+
+  <div class="summary-card">
+
+    <div class="label">
+      মোট Orders
+    </div>
+
+    <div
+      class="value"
+      id="summaryOrders"
+    >
+      0
+    </div>
+
+  </div>
+
+
+  <div class="summary-card">
+
+    <div class="label">
+      মোট Items
+    </div>
+
+    <div
+      class="value"
+      id="summaryItems"
+    >
+      0
+    </div>
+
+  </div>
+
+
+  <div class="summary-card">
+
+    <div class="label">
+      মোট Purchase
+    </div>
+
+    <div
+      class="value"
+      id="summaryPurchase"
+    >
+      ৳0.00
+    </div>
+
+  </div>
+
+
+  <div class="summary-card">
+
+    <div class="label">
+      মোট Sales
+    </div>
+
+    <div
+      class="value"
+      id="summarySales"
+    >
+      ৳0.00
+    </div>
+
+  </div>
+
+
+  <div class="summary-card">
+
+    <div class="label">
+      মোট Profit
+    </div>
+
+    <div
+      class="value"
+      id="summaryProfit"
+    >
+      ৳0.00
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     REPORT TABLE
+===================================================== -->
+
+<div class="table-box">
+
+
+  <div class="table-header">
+
+    <h3 id="tableTitle">
+      📦 Purchase Report
+    </h3>
+
+    <button
+      class="btn btn-print"
+      onclick="printReport()"
+    >
+      🖨️ Print Report
+    </button>
+
+  </div>
+
+
+  <div
+    id="tableContainer"
+    class="table-wrapper"
+  >
+
+    <div class="empty">
+      এখনো কোনো রিপোর্ট তৈরি করা হয়নি।
+    </div>
+
+  </div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+// =====================================================
+// API CONFIG
+// =====================================================
+
+const API_BASE =
+  "http://localhost:5000";
+
+
+const PRODUCTS_URL =
+  API_BASE +
+  "/api/admin-products";
+
+
+const PURCHASE_REPORT_URL =
+  API_BASE +
+  "/api/stock-reports/purchase";
+
+
+const SALES_REPORT_URL =
+  API_BASE +
+  "/api/sales-reports/sales";
+
+
+const BUSINESS_REPORT_URL =
+  API_BASE +
+  "/api/profit/business-statement";
+
+
+// =====================================================
+// GLOBAL VARIABLES
+// =====================================================
+
+let currentReportType =
+  "purchase";
+
+
+let currentReportData =
+  [];
+
+
+let currentReportSummary =
+  {};
+
+
+let currentColumns =
+  [];
+
+
+// =====================================================
+// REPORT COLUMN DEFINITIONS
+// =====================================================
+
+const REPORT_COLUMNS = {
+
+
+  // ---------------------------------------------------
+  // PURCHASE
+  // ---------------------------------------------------
+
+  purchase: [
+
+    {
+      key: "created_at",
+      label: "Date"
+    },
+
+    {
+      key: "history_id",
+      label: "History ID"
+    },
+
+    {
+      key: "product_name",
+      label: "Product"
+    },
+
+    {
+      key: "quantity",
+      label: "Quantity"
+    },
+
+    {
+      key: "unit",
+      label: "Unit"
+    },
+
+    {
+      key: "purchase_price",
+      label: "Purchase Price"
+    },
+
+    {
+      key: "total_purchase_value",
+      label: "Total Purchase"
+    },
+
+    {
+      key: "added_by",
+      label: "Added By"
+    }
+
+  ],
+
+
+  // ---------------------------------------------------
+  // SALES
+  // ---------------------------------------------------
+
+  sales: [
+
+    {
+      key: "created_at",
+      label: "Date"
+    },
+
+    {
+      key: "order_id",
+      label: "Order ID"
+    },
+
+    {
+      key: "customer",
+      label: "Customer"
+    },
+
+    {
+      key: "customer_phone",
+      label: "Customer Phone"
+    },
+
+    {
+      key: "employee",
+      label: "Employee"
+    },
+
+    {
+      key: "product_name",
+      label: "Product"
+    },
+
+    {
+      key: "quantity",
+      label: "Quantity"
+    },
+
+    {
+      key: "unit",
+      label: "Unit"
+    },
+
+    {
+      key: "unit_price",
+      label: "Selling Price"
+    },
+
+    {
+      key: "buying_price",
+      label: "Purchase Price"
+    },
+
+    {
+      key: "subtotal",
+      label: "Subtotal"
+    },
+
+    {
+      key: "item_profit",
+      label: "Item Profit"
+    },
+
+    {
+      key: "payment_method",
+      label: "Payment Method"
+    },
+
+    {
+      key: "payment_status",
+      label: "Payment Status"
+    },
+
+    {
+      key: "order_status",
+      label: "Order Status"
+    }
+
+  ],
+
+
+  // ---------------------------------------------------
+  // BUSINESS STATEMENT
+  // ---------------------------------------------------
+
+  business: [
+
+    {
+      key: "report_date",
+      label: "Date"
+    },
+
+    {
+      key: "total_orders",
+      label: "Orders"
+    },
+
+    {
+      key: "total_items",
+      label: "Items Sold"
+    },
+
+    {
+      key: "total_purchase_cost",
+      label: "Purchase Cost"
+    },
+
+    {
+      key: "total_sales",
+      label: "Sales"
+    },
+
+    {
+      key: "total_profit",
+      label: "Profit"
+    }
+
+  ]
+
+};
+
+
+// =====================================================
+// PAGE LOAD
+// =====================================================
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async function() {
+
+
+    const token =
+      localStorage.getItem(
+        "admin_token"
+      );
+
+
+    if (!token) {
+
+      alert(
+        "Admin login required."
+      );
+
+      window.location.href =
+        "/main-admin-login";
+
+      return;
+
+    }
+
+
+    await loadAdminInfo();
+
+    await loadProducts();
+
+    selectReportType(
+      "purchase"
+    );
+
+  }
+);
+
+
+// =====================================================
+// AUTH HEADER
+// =====================================================
+
+function getAuthHeaders() {
+
+  const token =
+    localStorage.getItem(
+      "admin_token"
+    );
+
+
+  return {
+
+    "Authorization":
+      "Bearer " + token,
+
+    "Content-Type":
+      "application/json"
+
+  };
+
+}
+
+
+// =====================================================
+// ADMIN INFO
+// =====================================================
+
+async function loadAdminInfo() {
+
+  try {
+
+    const response =
+      await fetch(
+        API_BASE +
+        "/api/auth/me",
+        {
+          headers:
+            getAuthHeaders()
+        }
+      );
+
+
+    if (
+      response.status === 401
+    ) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      data.admin
+    ) {
+
+      const role =
+        data.admin.role;
+
+
+      document.getElementById(
+        "roleBadge"
+      ).textContent =
+        role === "main_admin"
+          ? "👑 Main Admin"
+          : "🛡️ Sub Admin";
+
+    }
+
+  }
+  catch (error) {
+
+    console.error(
+      "ADMIN INFO ERROR:",
+      error
+    );
+
+    showMessage(
+      "Admin তথ্য পাওয়া যায়নি।",
+      "error"
+    );
+
+  }
+
+}
+
+
+// =====================================================
+// LOAD PRODUCTS
+// =====================================================
+
+async function loadProducts() {
+
+  try {
+
+    const response =
+      await fetch(
+        PRODUCTS_URL,
+        {
+          headers:
+            getAuthHeaders()
+        }
+      );
+
+
+    if (
+      response.status === 401
+    ) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    const text =
+      await response.text();
+
+
+    let data;
+
+
+    try {
+
+      data =
+        JSON.parse(text);
+
+    }
+    catch (jsonError) {
+
+      console.error(
+        "PRODUCT API RESPONSE:",
+        text
+      );
+
+      throw new Error(
+        "Product API থেকে JSON পাওয়া যায়নি।"
+      );
+
+    }
+
+
+    const select =
+      document.getElementById(
+        "productSelect"
+      );
+
+
+    select.innerHTML =
+      `<option value="">সকল পণ্য</option>`;
+
+
+    let products = [];
+
+
+    if (
+      Array.isArray(data)
+    ) {
+
+      products =
+        data;
+
+    }
+    else if (
+      Array.isArray(data.products)
+    ) {
+
+      products =
+        data.products;
+
+    }
+    else if (
+      Array.isArray(data.data)
+    ) {
+
+      products =
+        data.data;
+
+    }
+
+
+    products.forEach(
+      product => {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+
+        option.value =
+          product.id;
+
+
+        option.textContent =
+          product.name;
+
+
+        select.appendChild(
+          option
+        );
+
+      }
+    );
+
+  }
+  catch (error) {
+
+    console.error(
+      "LOAD PRODUCTS ERROR:",
+      error
+    );
+
+    showMessage(
+      "Product list load করা যায়নি: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+// =====================================================
+// SELECT REPORT TYPE
+// =====================================================
+
+function selectReportType(
+  type
+) {
+
+  currentReportType =
+    type;
+
+
+  document
+    .getElementById(
+      "purchaseCard"
+    )
+    .classList.remove(
+      "active"
+    );
+
+
+  document
+    .getElementById(
+      "salesCard"
+    )
+    .classList.remove(
+      "active"
+    );
+
+
+  document
+    .getElementById(
+      "businessCard"
+    )
+    .classList.remove(
+      "active"
+    );
+
+
+  if (
+    type === "purchase"
+  ) {
+
+    document
+      .getElementById(
+        "purchaseCard"
+      )
+      .classList.add(
+        "active"
+      );
+
+
+    document
+      .getElementById(
+        "tableTitle"
+      )
+      .textContent =
+        "📦 Purchase Report";
+
+  }
+
+
+  if (
+    type === "sales"
+  ) {
+
+    document
+      .getElementById(
+        "salesCard"
+      )
+      .classList.add(
+        "active"
+      );
+
+
+    document
+      .getElementById(
+        "tableTitle"
+      )
+      .textContent =
+        "🛒 Sales Report";
+
+  }
+
+
+  if (
+    type === "business"
+  ) {
+
+    document
+      .getElementById(
+        "businessCard"
+      )
+      .classList.add(
+        "active"
+      );
+
+
+    document
+      .getElementById(
+        "tableTitle"
+      )
+      .textContent =
+        "🏦 Business Statement";
+
+  }
+
+
+  // Business Statement-এ Product filter প্রয়োজন নেই
+
+  const productField =
+    document.getElementById(
+      "productField"
+    );
+
+
+  if (
+    type === "business"
+  ) {
+
+    productField.style.display =
+      "none";
+
+  }
+  else {
+
+    productField.style.display =
+      "block";
+
+  }
+
+
+  currentReportData =
+    [];
+
+
+  currentReportSummary =
+    {};
+
+
+  updateSummary();
+
+
+  document.getElementById(
+    "tableContainer"
+  ).innerHTML = `
+
+    <div class="empty">
+      Report তৈরি করার জন্য উপরের
+      "📊 Report তৈরি করুন" button চাপুন।
+    </div>
+
+  `;
+
+
+  renderColumnCheckboxes();
+
+}
+
+
+// =====================================================
+// RENDER COLUMN CHECKBOXES
+// =====================================================
+
+function renderColumnCheckboxes() {
+
+  const container =
+    document.getElementById(
+      "columnCheckboxes"
+    );
+
+
+  container.innerHTML =
+    "";
+
+
+  const columns =
+    REPORT_COLUMNS[
+      currentReportType
+    ] || [];
+
+
+  // নতুন Report Type হলে সব Column select
+
+  currentColumns =
+    columns.map(
+      column =>
+        column.key
+    );
+
+
+  columns.forEach(
+    column => {
+
+      const wrapper =
+        document.createElement(
+          "label"
+        );
+
+
+      wrapper.className =
+        "checkbox-item";
+
+
+      wrapper.innerHTML = `
+
+        <input
+          type="checkbox"
+          value="${column.key}"
+          checked
+          onchange="columnChanged()"
+        >
+
+        ${column.label}
+
+      `;
+
+
+      container.appendChild(
+        wrapper
+      );
+
+    }
+  );
+
+}
+
+
+// =====================================================
+// COLUMN CHANGED
+// =====================================================
+
+function columnChanged() {
+
+  currentColumns =
+    Array.from(
+      document.querySelectorAll(
+        "#columnCheckboxes input:checked"
+      )
+    ).map(
+      input =>
+        input.value
+    );
+
+
+  if (
+    currentReportData.length > 0
+  ) {
+
+    renderReportTable();
+
+  }
+
+}
+
+
+// =====================================================
+// SELECT ALL
+// =====================================================
+
+function selectAllColumns() {
+
+  const columns =
+    REPORT_COLUMNS[
+      currentReportType
+    ] || [];
+
+
+  currentColumns =
+    columns.map(
+      column =>
+        column.key
+    );
+
+
+  renderColumnCheckboxes();
+
+
+  if (
+    currentReportData.length > 0
+  ) {
+
+    renderReportTable();
+
+  }
+
+}
+
+
+// =====================================================
+// UNSELECT ALL
+// =====================================================
+
+function unselectAllColumns() {
+
+  currentColumns =
+    [];
+
+
+  const checkboxes =
+    document.querySelectorAll(
+      "#columnCheckboxes input"
+    );
+
+
+  checkboxes.forEach(
+    checkbox => {
+
+      checkbox.checked =
+        false;
+
+    }
+  );
+
+
+  if (
+    currentReportData.length > 0
+  ) {
+
+    renderReportTable();
+
+  }
+
+}
+
+
+// =====================================================
+// GENERATE REPORT
+// =====================================================
+
+async function generateReport() {
+
+
+  const fromDate =
+    document.getElementById(
+      "fromDate"
+    ).value;
+
+
+  const toDate =
+    document.getElementById(
+      "toDate"
+    ).value;
+
+
+  const productId =
+    document.getElementById(
+      "productSelect"
+    ).value;
+
+
+  // ---------------------------------------------------
+  // DATE VALIDATION
+  // ---------------------------------------------------
+
+  if (
+    fromDate &&
+    toDate &&
+    fromDate > toDate
+  ) {
+
+    showMessage(
+      "From Date, To Date-এর চেয়ে পরে হতে পারবে না।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  // ---------------------------------------------------
+  // SELECT API
+  // ---------------------------------------------------
+
+  let url;
+
+
+  if (
+    currentReportType ===
+    "purchase"
+  ) {
+
+    url =
+      new URL(
+        PURCHASE_REPORT_URL
+      );
+
+  }
+
+
+  else if (
+    currentReportType ===
+    "sales"
+  ) {
+
+    url =
+      new URL(
+        SALES_REPORT_URL
+      );
+
+  }
+
+
+  else if (
+    currentReportType ===
+    "business"
+  ) {
+
+    url =
+      new URL(
+        BUSINESS_REPORT_URL
+      );
+
+  }
+
+
+  // ---------------------------------------------------
+  // DATE PARAMETERS
+  // ---------------------------------------------------
+
+  if (fromDate) {
+
+    url.searchParams.set(
+      "from_date",
+      fromDate
+    );
+
+  }
+
+
+  if (toDate) {
+
+    url.searchParams.set(
+      "to_date",
+      toDate
+    );
+
+  }
+
+
+  // Purchase/Sales-এর জন্য Product Filter
+
+  if (
+    productId &&
+    currentReportType !==
+    "business"
+  ) {
+
+    url.searchParams.set(
+      "product_id",
+      productId
+    );
+
+  }
+
+
+  showMessage(
+    "⏳ Report তৈরি হচ্ছে...",
+    "info"
+  );
+
+
+  try {
+
+
+    const response =
+      await fetch(
+        url.toString(),
+        {
+          method: "GET",
+          headers:
+            getAuthHeaders()
+        }
+      );
+
+
+    const responseText =
+      await response.text();
+
+
+    let data;
+
+
+    try {
+
+      data =
+        JSON.parse(
+          responseText
+        );
+
+    }
+    catch (jsonError) {
+
+      console.error(
+        "REPORT API RAW RESPONSE:",
+        responseText
+      );
+
+
+      throw new Error(
+        "Server JSON-এর পরিবর্তে HTML/অন্য response দিয়েছে।"
+      );
+
+    }
+
+
+    // -------------------------------------------------
+    // AUTH ERROR
+    // -------------------------------------------------
+
+    if (
+      response.status ===
+      401
+    ) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    // -------------------------------------------------
+    // OTHER API ERROR
+    // -------------------------------------------------
+
+    if (
+      !response.ok
+    ) {
+
+      throw new Error(
+        data.message ||
+        "Report API error"
+      );
+
+    }
+
+
+    // -------------------------------------------------
+    // DATA
+    // -------------------------------------------------
+
+    currentReportData =
+      Array.isArray(
+        data.data
+      )
+        ? data.data
+        : [];
+
+
+    currentReportSummary =
+      data.summary ||
+      {};
+
+
+    // -------------------------------------------------
+    // UPDATE SUMMARY
+    // -------------------------------------------------
+
+    updateSummary();
+
+
+    // -------------------------------------------------
+    // TABLE
+    // -------------------------------------------------
+
+    renderReportTable();
+
+
+    showMessage(
+      "✅ Report সফলভাবে তৈরি হয়েছে। মোট " +
+      currentReportData.length +
+      "টি record পাওয়া গেছে।",
+      "success"
+    );
+
+
+  }
+  catch (error) {
+
+    console.error(
+      "REPORT ERROR:",
+      error
+    );
+
+
+    showMessage(
+      "❌ Report তৈরি করা যায়নি: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+// =====================================================
+// UPDATE SUMMARY
+// =====================================================
+
+function updateSummary() {
+
+  const summary =
+    currentReportSummary ||
+    {};
+
+
+  document.getElementById(
+    "summaryOrders"
+  ).textContent =
+    formatNumber(
+      summary.total_orders ||
+      0
+    );
+
+
+  document.getElementById(
+    "summaryItems"
+  ).textContent =
+    formatNumber(
+      summary.total_items ||
+      0
+    );
+
+
+  document.getElementById(
+    "summaryPurchase"
+  ).textContent =
+    formatMoney(
+      summary.total_purchase_cost ??
+      summary.total_purchase ??
+      summary.total_purchase_value ??
+      0
+    );
+
+
+  document.getElementById(
+    "summarySales"
+  ).textContent =
+    formatMoney(
+      summary.total_sales ||
+      0
+    );
+
+
+  document.getElementById(
+    "summaryProfit"
+  ).textContent =
+    formatMoney(
+      summary.total_profit ||
+      0
+    );
+
+}
+
+
+// =====================================================
+// RENDER REPORT TABLE
+// =====================================================
+
+function renderReportTable() {
+
+
+  const container =
+    document.getElementById(
+      "tableContainer"
+    );
+
+
+  if (
+    currentReportData.length ===
+    0
+  ) {
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        এই Filter অনুযায়ী কোনো data পাওয়া যায়নি।
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const columns =
+    REPORT_COLUMNS[
+      currentReportType
+    ].filter(
+      column =>
+        currentColumns.includes(
+          column.key
+        )
+    );
+
+
+  if (
+    columns.length ===
+    0
+  ) {
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        অন্তত একটি Column Select করুন।
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  let html =
+    "<table>";
+
+
+  html +=
+    "<thead><tr>";
+
+
+  columns.forEach(
+    column => {
+
+      html +=
+        `<th>${escapeHtml(
+          column.label
+        )}</th>`;
+
+    }
+  );
+
+
+  html +=
+    "</tr></thead>";
+
+
+  html +=
+    "<tbody>";
+
+
+  currentReportData.forEach(
+    row => {
+
+      html +=
+        "<tr>";
+
+
+      columns.forEach(
+        column => {
+
+          html +=
+            "<td>" +
+            formatCell(
+              row,
+              column.key
+            ) +
+            "</td>";
+
+        }
+      );
+
+
+      html +=
+        "</tr>";
+
+    }
+  );
+
+
+  html +=
+    "</tbody></table>";
+
+
+  container.innerHTML =
+    html;
+
+}
+
+
+// =====================================================
+// FORMAT CELL
+// =====================================================
+
+function formatCell(
+  row,
+  key
+) {
+
+
+  let value =
+    "";
+
+
+  // ---------------------------------------------------
+  // PURCHASE
+  // ---------------------------------------------------
+
+  if (
+    currentReportType ===
+    "purchase"
+  ) {
+
+
+    if (
+      key === "created_at"
+    ) {
+
+      value =
+        formatDate(
+          row.created_at
+        );
+
+    }
+
+
+    else if (
+      key === "history_id"
+    ) {
+
+      value =
+        row.id ??
+        row.history_id ??
+        "";
+
+    }
+
+
+    else if (
+      key === "product_name"
+    ) {
+
+      value =
+        row.product_name ??
+        "";
+
+    }
+
+
+    else if (
+      key === "quantity"
+    ) {
+
+      value =
+        formatNumber(
+          row.quantity
+        );
+
+    }
+
+
+    else if (
+      key === "unit"
+    ) {
+
+      value =
+        row.unit ??
+        "";
+
+    }
+
+
+    else if (
+      key === "purchase_price"
+    ) {
+
+      value =
+        formatMoney(
+          row.purchase_price
+        );
+
+    }
+
+
+    else if (
+      key === "total_purchase_value"
+    ) {
+
+      value =
+        formatMoney(
+          row.total_purchase_value
+        );
+
+    }
+
+
+    else if (
+      key === "added_by"
+    ) {
+
+      value =
+        row.added_by ??
+        row.admin_name ??
+        row.employee_name ??
+        "Admin";
+
+    }
+
+  }
+
+
+  // ---------------------------------------------------
+  // SALES
+  // ---------------------------------------------------
+
+  if (
+    currentReportType ===
+    "sales"
+  ) {
+
+
+    if (
+      key === "created_at"
+    ) {
+
+      value =
+        formatDate(
+          row.created_at
+        );
+
+    }
+
+
+    else if (
+      key === "order_id"
+    ) {
+
+      value =
+        row.order_id ??
+        "";
+
+    }
+
+
+    else if (
+      key === "customer"
+    ) {
+
+      value =
+        row.customer_name ??
+        row.customer ??
+        "";
+
+    }
+
+
+    else if (
+      key === "customer_phone"
+    ) {
+
+      value =
+        row.customer_phone ??
+        "";
+
+    }
+
+
+    else if (
+      key === "employee"
+    ) {
+
+      value =
+        row.employee_name ??
+        row.employee ??
+        "Not Assigned";
+
+    }
+
+
+    else if (
+      key === "product_name"
+    ) {
+
+      value =
+        row.product_name ??
+        "";
+
+    }
+
+
+    else if (
+      key === "quantity"
+    ) {
+
+      value =
+        formatNumber(
+          row.quantity
+        );
+
+    }
+
+
+    else if (
+      key === "unit"
+    ) {
+
+      value =
+        row.unit ??
+        "";
+
+    }
+
+
+    else if (
+      key === "unit_price"
+    ) {
+
+      value =
+        formatMoney(
+          row.unit_price
+        );
+
+    }
+
+
+    else if (
+      key === "buying_price"
+    ) {
+
+      value =
+        formatMoney(
+          row.buying_price
+        );
+
+    }
+
+
+    else if (
+      key === "subtotal"
+    ) {
+
+      value =
+        formatMoney(
+          row.subtotal
+        );
+
+    }
+
+
+    else if (
+      key === "item_profit"
+    ) {
+
+      value =
+        formatMoney(
+          row.item_profit
+        );
+
+    }
+
+
+    else if (
+      key === "payment_method"
+    ) {
+
+      value =
+        translatePaymentMethod(
+          row.payment_method
+        );
+
+    }
+
+
+    else if (
+      key === "payment_status"
+    ) {
+
+      value =
+        translatePaymentStatus(
+          row.payment_status
+        );
+
+    }
+
+
+    else if (
+      key === "order_status"
+    ) {
+
+      value =
+        translateOrderStatus(
+          row.order_status
+        );
+
+    }
+
+  }
+
+
+  // ---------------------------------------------------
+  // BUSINESS STATEMENT
+  // ---------------------------------------------------
+
+  if (
+    currentReportType ===
+    "business"
+  ) {
+
+
+    if (
+      key === "report_date"
+    ) {
+
+      value =
+        formatBusinessDate(
+          row.report_date
+        );
+
+    }
+
+
+    else if (
+      key === "total_orders"
+    ) {
+
+      value =
+        formatNumber(
+          row.total_orders
+        );
+
+    }
+
+
+    else if (
+      key === "total_items"
+    ) {
+
+      value =
+        formatNumber(
+          row.total_items
+        );
+
+    }
+
+
+    else if (
+      key === "total_purchase_cost"
+    ) {
+
+      value =
+        formatMoney(
+          row.total_purchase_cost
+        );
+
+    }
+
+
+    else if (
+      key === "total_sales"
+    ) {
+
+      value =
+        formatMoney(
+          row.total_sales
+        );
+
+    }
+
+
+    else if (
+      key === "total_profit"
+    ) {
+
+      value =
+        formatMoney(
+          row.total_profit
+        );
+
+    }
+
+  }
+
+
+  return escapeHtml(
+    String(
+      value ??
+      ""
+    )
+  );
+
+}
+
+
+// =====================================================
+// DATE FORMAT - PURCHASE / SALES
+// =====================================================
+
+function formatDate(
+  value
+) {
+
+
+  if (!value) {
+
+    return "";
+
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return String(
+      value
+    );
+
+  }
+
+
+  return date.toLocaleString(
+    "bn-BD",
+    {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  );
+
+}
+
+
+// =====================================================
+// BUSINESS DATE FORMAT
+// =====================================================
+
+function formatBusinessDate(
+  value
+) {
+
+
+  if (!value) {
+
+    return "";
+
+  }
+
+
+  // Backend থেকে YYYY-MM-DD এলে
+  // timezone conversion এড়ানোর জন্য সরাসরি format
+
+  const parts =
+    String(value).split("-");
+
+
+  if (
+    parts.length === 3
+  ) {
+
+    return (
+      parts[2] +
+      "/" +
+      parts[1] +
+      "/" +
+      parts[0]
+    );
+
+  }
+
+
+  return String(
+    value
+  );
+
+}
+
+
+// =====================================================
+// NUMBER FORMAT
+// =====================================================
+
+function formatNumber(
+  value
+) {
+
+
+  const number =
+    Number(
+      value ||
+      0
+    );
+
+
+  return number.toLocaleString(
+    "en-US",
+    {
+      maximumFractionDigits: 2
+    }
+  );
+
+}
+
+
+// =====================================================
+// MONEY FORMAT
+// =====================================================
+
+function formatMoney(
+  value
+) {
+
+
+  const number =
+    Number(
+      value ||
+      0
+    );
+
+
+  return (
+    "৳" +
+    number.toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    )
+  );
+
+}
+
+
+// =====================================================
+// PAYMENT METHOD
+// =====================================================
+
+function translatePaymentMethod(
+  value
+) {
+
+
+  if (
+    value ===
+    "cash_on_delivery"
+  ) {
+
+    return "Cash on Delivery";
+
+  }
+
+
+  if (
+    value ===
+    "online"
+  ) {
+
+    return "Online";
+
+  }
+
+
+  return value ||
+    "";
+
+}
+
+
+// =====================================================
+// PAYMENT STATUS
+// =====================================================
+
+function translatePaymentStatus(
+  value
+) {
+
+
+  const map = {
+
+    pending:
+      "Pending",
+
+    paid:
+      "Paid",
+
+    failed:
+      "Failed"
+
+  };
+
+
+  return (
+    map[value] ||
+    value ||
+    ""
+  );
+
+}
+
+
+// =====================================================
+// ORDER STATUS
+// =====================================================
+
+function translateOrderStatus(
+  value
+) {
+
+
+  const map = {
+
+    pending:
+      "Pending",
+
+    confirmed:
+      "Confirmed",
+
+    processing:
+      "Processing",
+
+    out_for_delivery:
+      "Out for Delivery",
+
+    delivered:
+      "Delivered",
+
+    cancelled:
+      "Cancelled"
+
+  };
+
+
+  return (
+    map[value] ||
+    value ||
+    ""
+  );
+
+}
+
+
+// =====================================================
+// RESET
+// =====================================================
+
+function resetFilters() {
+
+
+  document.getElementById(
+    "fromDate"
+  ).value =
+    "";
+
+
+  document.getElementById(
+    "toDate"
+  ).value =
+    "";
+
+
+  document.getElementById(
+    "productSelect"
+  ).value =
+    "";
+
+
+  currentReportData =
+    [];
+
+
+  currentReportSummary =
+    {};
+
+
+  updateSummary();
+
+
+  document.getElementById(
+    "tableContainer"
+  ).innerHTML = `
+
+    <div class="empty">
+
+      এখনো কোনো রিপোর্ট তৈরি করা হয়নি।
+
+    </div>
+
+  `;
+
+
+  hideMessage();
+
+}
+
+
+// =====================================================
+// PRINT
+// =====================================================
+
+function printReport() {
+
+
+  if (
+    currentReportData.length ===
+    0
+  ) {
+
+    alert(
+      "প্রথমে একটি Report তৈরি করুন।"
+    );
+
+    return;
+
+  }
+
+
+  window.print();
+
+}
+
+
+// =====================================================
+// DASHBOARD
+// =====================================================
+
+function goDashboard() {
+
+  window.location.href =
+    "/admin/index.html";
+
+}
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+function logout() {
+
+
+  localStorage.removeItem(
+    "admin_token"
+  );
+
+
+  localStorage.removeItem(
+    "admin"
+  );
+
+
+  window.location.href =
+    "/main-admin-login";
+
+}
+
+
+// =====================================================
+// MESSAGE
+// =====================================================
+
+function showMessage(
+  message,
+  type
+) {
+
+
+  const box =
+    document.getElementById(
+      "message"
+    );
+
+
+  box.textContent =
+    message;
+
+
+  box.className =
+    "message " +
+    type;
+
+}
+
+
+function hideMessage() {
+
+
+  const box =
+    document.getElementById(
+      "message"
+    );
+
+
+  box.textContent =
+    "";
+
+
+  box.className =
+    "message";
+
+}
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHtml(
+  value
+) {
+
+
+  return String(
+    value
+  )
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+</script>
+
+</body>
+</html>

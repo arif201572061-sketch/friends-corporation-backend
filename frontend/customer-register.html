@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Friends Corporation - Customer Registration</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 15px;
+    }
+
+    .register-box {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 25px;
+      font-weight: bold;
+      color: #0b7a3b;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #0b7a3b;
+      color: white;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #075b2d;
+    }
+
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .login-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #0b7a3b;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="register-box">
+
+      <div class="logo">
+        Friends Corporation
+      </div>
+
+      <h1>
+        Customer Registration
+      </h1>
+
+
+      <label for="name">
+        আপনার নাম *
+      </label>
+
+      <input
+        type="text"
+        id="name"
+        placeholder="আপনার পূর্ণ নাম"
+      >
+
+
+      <label for="phone">
+        মোবাইল নম্বর *
+      </label>
+
+      <input
+        type="tel"
+        id="phone"
+        placeholder="01XXXXXXXXX"
+      >
+
+
+      <label for="email">
+        Email
+      </label>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="আপনার Email"
+      >
+
+
+      <label for="password">
+        Password *
+      </label>
+
+      <input
+        type="password"
+        id="password"
+        placeholder="কমপক্ষে একটি Password দিন"
+      >
+
+
+      <label for="zone">
+        এলাকা / Zone
+      </label>
+
+      <select id="zone">
+
+        <option value="">
+          এলাকা নির্বাচন করুন
+        </option>
+
+        <option value="দহিসার">
+          দহিসার
+        </option>
+
+        <option value="জয়বাংলা">
+          জয়বাংলা
+        </option>
+
+        <option value="ছোট-শ্রীবর্দী">
+          ছোট-শ্রীবর্দী
+        </option>
+
+        <option value="কুমারদিয়া">
+          কুমারদিয়া
+        </option>
+
+        <option value="দামদরদী">
+          দামদরদী
+        </option>
+
+        <option value="ধর্মদী">
+          ধর্মদী
+        </option>
+
+        <option value="আশফরদী">
+          আশফরদী
+        </option>
+
+        <option value="নারায়নপুর">
+          নারায়নপুর
+        </option>
+
+        <option value="গজারিয়া">
+          গজারিয়া
+        </option>
+
+      </select>
+
+
+      <label for="address">
+        Delivery Address
+      </label>
+
+      <textarea
+        id="address"
+        placeholder="আপনার সম্পূর্ণ ঠিকানা"
+      ></textarea>
+
+
+      <button
+        id="registerButton"
+        onclick="registerCustomer()"
+      >
+        Account তৈরি করুন
+      </button>
+
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
+
+      <a
+        href="customer-login.html"
+        class="login-link"
+      >
+        আগে থেকেই Account আছে? Login করুন
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    async function registerCustomer() {
+
+      const name =
+        document.getElementById("name")
+          .value.trim();
+
+      const phone =
+        document.getElementById("phone")
+          .value.trim();
+
+      const email =
+        document.getElementById("email")
+          .value.trim();
+
+      const password =
+        document.getElementById("password")
+          .value;
+
+      const zone =
+        document.getElementById("zone")
+          .value;
+
+      const address =
+        document.getElementById("address")
+          .value.trim();
+
+
+      if (!name) {
+
+        showMessage(
+          "আপনার নাম লিখুন।"
+        );
+
+        return;
+
+      }
+
+
+      if (!phone) {
+
+        showMessage(
+          "মোবাইল নম্বর লিখুন।"
+        );
+
+        return;
+
+      }
+
+
+      if (!password) {
+
+        showMessage(
+          "Password দিন।"
+        );
+
+        return;
+
+      }
+
+
+      const button =
+        document.getElementById(
+          "registerButton"
+        );
+
+
+      button.disabled = true;
+
+      button.innerText =
+        "Account তৈরি হচ্ছে...";
+
+
+      try {
+
+        const response =
+          await fetch(
+            "http://localhost:5000/api/customer-auth/register",
+            {
+
+              method: "POST",
+
+              headers: {
+
+                "Content-Type":
+                  "application/json"
+
+              },
+
+              body: JSON.stringify({
+
+                name: name,
+
+                phone: phone,
+
+                email: email || null,
+
+                password: password,
+
+                address: address || null,
+
+                zone: zone || null
+
+              })
+
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          showMessage(
+            data.message ||
+            "Registration failed"
+          );
+
+
+          button.disabled = false;
+
+          button.innerText =
+            "Account তৈরি করুন";
+
+          return;
+
+        }
+
+
+        showMessage(
+          "🎉 Account সফলভাবে তৈরি হয়েছে! Login Page-এ যাচ্ছেন..."
+        );
+
+
+        setTimeout(() => {
+
+          window.location.href =
+            "customer-login.html";
+
+        }, 1500);
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+          "Server-এর সাথে যোগাযোগ করা যাচ্ছে না।"
+        );
+
+
+        button.disabled = false;
+
+        button.innerText =
+          "Account তৈরি করুন";
+
+      }
+
+    }
+
+
+    function showMessage(text) {
+
+      document.getElementById(
+        "message"
+      ).innerText = text;
+
+    }
+
+  </script>
+
+</body>
+</html>

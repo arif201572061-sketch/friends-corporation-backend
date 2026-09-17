@@ -1,0 +1,3243 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Friends Corporation - Order Management</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #222;
+    }
+
+
+    header {
+      background: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+
+    .header-content {
+      max-width: 1400px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+
+    .header-button {
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 14px;
+      color: white;
+    }
+
+
+    .dashboard-btn {
+      background: #0b7a3b;
+    }
+
+
+    .logout-btn {
+      background: #dc3545;
+    }
+
+
+    .container {
+      max-width: 1400px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+
+    .welcome {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+
+    .welcome h1 {
+      margin: 0 0 8px;
+      color: #0b7a3b;
+    }
+
+
+    .welcome p {
+      margin: 5px 0;
+      color: #666;
+    }
+
+
+    .role-badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #e8f5e9;
+      color: #0b7a3b;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+
+    /* =================================================
+       Notification Summary
+       ================================================= */
+
+    .notification-card {
+      background: linear-gradient(
+        135deg,
+        #0b7a3b,
+        #119b50
+      );
+
+      color: white;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+
+    .notification-card h2 {
+      margin: 0 0 8px;
+    }
+
+
+    .notification-number {
+      font-size: 38px;
+      font-weight: bold;
+    }
+
+
+    .notification-text {
+      opacity: 0.9;
+    }
+
+
+    /* =================================================
+       Status Boxes
+       ================================================= */
+
+    .status-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+
+      gap: 15px;
+
+      margin-bottom: 25px;
+    }
+
+
+    .status-box {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      cursor: pointer;
+      border-top: 5px solid #0b7a3b;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: 0.2s;
+    }
+
+
+    .status-box:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 5px 14px rgba(0,0,0,0.10);
+    }
+
+
+    .status-title {
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+
+    .status-count {
+      font-size: 32px;
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+
+    .status-description {
+      color: #777;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+
+    .new-box {
+      border-top-color: #007bff;
+    }
+
+
+    .pending-box {
+      border-top-color: #ffc107;
+    }
+
+
+    .processing-box {
+      border-top-color: #fd7e14;
+    }
+
+
+    .ready-box {
+      border-top-color: #6f42c1;
+    }
+
+
+    .delivery-box {
+      border-top-color: #17a2b8;
+    }
+
+
+    .completed-box {
+      border-top-color: #28a745;
+    }
+
+
+    .cancelled-box {
+      border-top-color: #dc3545;
+    }
+
+
+    /* =================================================
+       Order Section
+       ================================================= */
+
+    .section-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.06);
+    }
+
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+
+    .section-header h2 {
+      margin: 0;
+      color: #0b7a3b;
+    }
+
+
+    .refresh-btn {
+      border: none;
+      background: #0b7a3b;
+      color: white;
+      padding: 9px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1050px;
+    }
+
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+
+    th {
+      background: #f8f9fa;
+      font-size: 14px;
+    }
+
+
+    tr:hover td {
+      background: #fafafa;
+    }
+
+
+    .status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+
+    .status-new {
+      background: #e7f1ff;
+      color: #0069d9;
+    }
+
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+
+    .status-processing {
+      background: #ffe5d0;
+      color: #b84d00;
+    }
+
+
+    .status-ready {
+      background: #eee2ff;
+      color: #5a2d91;
+    }
+
+
+    .status-delivery {
+      background: #d9f4f8;
+      color: #087990;
+    }
+
+
+    .status-completed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+
+    .status-cancelled {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+
+    .action-area {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+
+    button {
+      font-family: inherit;
+    }
+
+
+    .btn {
+      border: none;
+      padding: 8px 11px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 13px;
+      color: white;
+    }
+
+
+    .btn-view {
+      background: #6c757d;
+    }
+
+
+    .btn-approve {
+      background: #198754;
+    }
+
+
+    .btn-assign {
+      background: #0d6efd;
+    }
+
+
+    .btn-status {
+      background: #6610f2;
+    }
+
+
+    .btn-cancel {
+      background: #dc3545;
+    }
+
+
+    .btn-print {
+      background: #212529;
+    }
+
+
+    select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      background: white;
+    }
+
+
+    .details-row {
+      display: none;
+    }
+
+
+    .details-row.show {
+      display: table-row;
+    }
+
+
+    .details-box {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+
+    .details-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+
+      gap: 10px;
+    }
+
+
+    .detail-item {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+
+    .detail-label {
+      color: #777;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+
+    .detail-value {
+      font-weight: bold;
+    }
+
+
+    .items-list {
+      margin-top: 15px;
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+
+    .item-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+
+    .item-line:last-child {
+      border-bottom: none;
+    }
+
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: #777;
+    }
+
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+
+    .success {
+      background: #d1e7dd;
+      color: #0f5132;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+
+    .notice {
+      background: #fff3cd;
+      color: #664d03;
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+
+    @media (max-width: 700px) {
+
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+
+      .header-buttons {
+        justify-content: center;
+      }
+
+
+      .container {
+        padding: 0 10px;
+      }
+
+
+      .status-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+    }
+
+
+    @media (max-width: 450px) {
+
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+  <div class="header-content">
+
+    <div class="logo">
+      Friends Corporation — Order Management
+    </div>
+
+
+    <div class="header-buttons">
+
+      <a
+        href="index.html"
+        class="header-button dashboard-btn"
+      >
+        ← Dashboard
+      </a>
+
+
+      <button
+        class="header-button logout-btn"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+<main class="container">
+
+
+  <!-- =================================================
+       Welcome
+       ================================================= -->
+
+  <div class="welcome">
+
+    <h1>
+      📦 Order Management
+    </h1>
+
+    <p id="adminInfo">
+      Admin তথ্য লোড হচ্ছে...
+    </p>
+
+    <span
+      id="roleBadge"
+      class="role-badge"
+    >
+      Loading...
+    </span>
+
+  </div>
+
+
+
+  <!-- =================================================
+       Sub Admin Notice
+       ================================================= -->
+
+  <div
+    id="subAdminNotice"
+    class="notice"
+    style="display:none;"
+  >
+
+    👀 <strong>Sub-Admin View Mode:</strong>
+
+    আপনি Order দেখতে এবং বিস্তারিত তথ্য দেখতে পারবেন।
+    Employee Assign এবং Order Status পরিবর্তন করতে পারবেন না।
+
+  </div>
+
+
+
+  <!-- =================================================
+       Active Notification
+       ================================================= -->
+
+  <div class="notification-card">
+
+    <h2>
+      🔔 Active Order Notifications
+    </h2>
+
+    <div
+      id="activeNotificationCount"
+      class="notification-number"
+    >
+      0
+    </div>
+
+    <div class="notification-text">
+      Completed এবং Cancelled Order এই সংখ্যায় অন্তর্ভুক্ত নয়।
+    </div>
+
+  </div>
+
+
+
+  <!-- =================================================
+       Order Status Boxes
+       ================================================= -->
+
+  <div class="status-grid">
+
+
+    <div
+      class="status-box new-box"
+      onclick="filterOrders('new_order')"
+    >
+
+      <div class="status-title">
+        🆕 নতুন অর্ডার
+      </div>
+
+      <div
+        id="count-new_order"
+        class="status-count"
+      >
+        0
+      </div>
+
+      <div class="status-description">
+        নতুন Customer Order
+      </div>
+
+    </div>
+
+
+
+    <div
+      class="status-box pending-box"
+      onclick="filterOrders('pending')"
+    >
+
+      <div class="status-title">
+        ⏳ Pending Order
+      </div>
+
+      <div
+        id="count-pending"
+        class="status-count"
+      >
+        0
+      </div>
+
+      <div class="status-description">
+        Approved Order
+      </div>
+
+    </div>
+
+
+
+    <div
+      class="status-box processing-box"
+      onclick="filterOrders('processing')"
+    >
+
+      <div class="status-title">
+        🔧 Processing
+      </div>
+
+      <div
+        id="count-processing"
+        class="status-count"
+      >
+        0
+      </div>
+
+      <div class="status-description">
+        পণ্য প্রস্তুত হচ্ছে
+      </div>
+
+    </div>
+
+
+
+    <div
+      class="status-box ready-box"
+      onclick="filterOrders('ready_for_delivery')"
+    >
+
+      <div class="status-title">
+        📦 Ready for Delivery
+      </div>
+
+      <div
+        id="count-ready_for_delivery"
+        class="status-count"
+      >
+        0
+      </div>
+
+      <div class="status-description">
+        Delivery-এর জন্য প্রস্তুত
+      </div>
+
+    </div>
+
+
+
+    <div
+      class="status-box delivery-box"
+      onclick="filterOrders('out_for_delivery')"
+    >
+
+      <div class="status-title">
+        🚚 Delivery হচ্ছে
+      </div>
+
+      <div
+        id="count-out_for_delivery"
+        class="status-count"
+      >
+        0
+      </div>
+
+      <div class="status-description">
+        Employee-এর কাছে Delivery
+      </div>
+
+    </div>
+
+
+
+    <div
+      class="status-box completed-box"
+      onclick="filterOrders('delivered')"
+    >
+
+      <div class="status-title">
+        ✅ সম্পন্ন অর্ডার
+      </div>
+
+      <div
+        id="count-delivered"
+        class="status-count"
+      >
+        0
+      </div>
+
+      <div class="status-description">
+        Completed Order History
+      </div>
+
+    </div>
+
+
+
+    <div
+      class="status-box cancelled-box"
+      onclick="filterOrders('cancelled')"
+    >
+
+      <div class="status-title">
+        ❌ Cancelled Order
+      </div>
+
+      <div
+        id="count-cancelled"
+        class="status-count"
+      >
+        0
+      </div>
+
+      <div class="status-description">
+        Cancelled Order History
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =================================================
+       Order List
+       ================================================= -->
+
+  <div class="section-card">
+
+    <div class="section-header">
+
+      <h2 id="listTitle">
+        📋 সব Order
+      </h2>
+
+
+      <button
+        class="refresh-btn"
+        onclick="loadEverything()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+
+    <div id="messageArea"></div>
+
+
+    <div
+      id="loading"
+      class="loading"
+    >
+      Order লোড হচ্ছে...
+    </div>
+
+
+    <div
+      id="tableArea"
+      class="table-wrapper"
+      style="display:none;"
+    >
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Order ID
+            </th>
+
+            <th>
+              Customer
+            </th>
+
+            <th>
+              Phone
+            </th>
+
+            <th>
+              Total
+            </th>
+
+            <th>
+              Employee
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody id="orderTableBody"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+</main>
+
+
+
+<script>
+
+
+  // =====================================================
+  // API
+  // =====================================================
+
+  const API_BASE =
+    "http://localhost:5000";
+
+
+  const API_URL =
+    API_BASE + "/api/admin-orders";
+
+
+  const AUTH_URL =
+    API_BASE + "/api/auth/me";
+
+
+  const EMPLOYEE_URL =
+    API_BASE + "/api/employees";
+
+
+  const token =
+    localStorage.getItem(
+      "admin_token"
+    );
+
+
+  let adminRole = "";
+
+
+  let employees = [];
+
+
+  let allOrders = [];
+
+
+  let currentFilter = "all";
+
+
+
+  // =====================================================
+  // Login Check
+  // =====================================================
+
+  if (!token) {
+
+    document.getElementById(
+      "messageArea"
+    ).innerHTML = `
+
+      <div class="error">
+
+        Admin Login প্রয়োজন।
+
+      </div>
+
+    `;
+
+    document.getElementById(
+      "loading"
+    ).style.display = "none";
+
+  }
+
+
+
+  // =====================================================
+  // Initial Load
+  // =====================================================
+
+  else {
+
+    loadEverything();
+
+  }
+
+
+
+  // =====================================================
+  // Load Everything
+  // =====================================================
+
+  async function loadEverything() {
+
+    if (!token) {
+      return;
+    }
+
+
+    try {
+
+      document.getElementById(
+        "loading"
+      ).style.display = "block";
+
+
+      document.getElementById(
+        "tableArea"
+      ).style.display = "none";
+
+
+      clearMessage();
+
+
+      await loadAdmin();
+
+
+      await loadEmployees();
+
+
+      await loadCounts();
+
+
+      await loadOrders();
+
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      showError(
+        error.message ||
+        "Data load failed"
+      );
+
+    }
+
+    finally {
+
+      document.getElementById(
+        "loading"
+      ).style.display = "none";
+
+    }
+
+  }
+
+
+
+  // =====================================================
+  // Load Admin
+  // =====================================================
+
+  async function loadAdmin() {
+
+    const response =
+      await fetch(
+        AUTH_URL,
+        {
+          headers: {
+            "Authorization":
+              "Bearer " + token
+          }
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Admin information load failed"
+      );
+
+    }
+
+
+    const admin =
+      data.admin;
+
+
+    adminRole =
+      admin.role || "";
+
+
+    document.getElementById(
+      "adminInfo"
+    ).textContent =
+
+      `Welcome ${admin.name || "Admin"} (${admin.email || ""})`;
+
+
+    const roleBadge =
+      document.getElementById(
+        "roleBadge"
+      );
+
+
+    if (
+      adminRole ===
+      "main_admin"
+    ) {
+
+      roleBadge.textContent =
+        "👑 Main Admin";
+
+      roleBadge.style.background =
+        "#d1e7dd";
+
+      roleBadge.style.color =
+        "#0f5132";
+
+    }
+
+    else {
+
+      roleBadge.textContent =
+        "👀 Sub-Admin";
+
+      roleBadge.style.background =
+        "#fff3cd";
+
+      roleBadge.style.color =
+        "#664d03";
+
+
+      document.getElementById(
+        "subAdminNotice"
+      ).style.display =
+        "block";
+
+    }
+
+  }
+
+
+
+  // =====================================================
+  // Load Employees
+  // =====================================================
+
+  async function loadEmployees() {
+
+    if (
+      adminRole !==
+      "main_admin"
+    ) {
+
+      employees = [];
+
+      return;
+
+    }
+
+
+    const response =
+      await fetch(
+        EMPLOYEE_URL,
+        {
+          headers: {
+            "Authorization":
+              "Bearer " + token
+          }
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      console.warn(
+        "Employee API:",
+        data
+      );
+
+      employees = [];
+
+      return;
+
+    }
+
+
+    if (
+      Array.isArray(data)
+    ) {
+
+      employees = data;
+
+    }
+
+    else if (
+      Array.isArray(data.employees)
+    ) {
+
+      employees =
+        data.employees;
+
+    }
+
+    else {
+
+      employees = [];
+
+    }
+
+  }
+
+
+
+  // =====================================================
+  // Load Counts
+  // =====================================================
+
+  async function loadCounts() {
+
+    const response =
+      await fetch(
+        API_URL + "/counts",
+        {
+          headers: {
+            "Authorization":
+              "Bearer " + token
+          }
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Order count load failed"
+      );
+
+    }
+
+
+    const counts =
+      data.counts || {};
+
+
+    const statuses = [
+
+      "new_order",
+
+      "pending",
+
+      "processing",
+
+      "ready_for_delivery",
+
+      "out_for_delivery",
+
+      "delivered",
+
+      "cancelled"
+
+    ];
+
+
+    statuses.forEach(
+      status => {
+
+        const element =
+          document.getElementById(
+            "count-" + status
+          );
+
+
+        if (element) {
+
+          element.textContent =
+            Number(
+              counts[status] || 0
+            );
+
+        }
+
+      }
+    );
+
+
+    document.getElementById(
+      "activeNotificationCount"
+    ).textContent =
+
+      Number(
+        data.active_notification_count || 0
+      );
+
+  }
+
+
+
+  // =====================================================
+  // Load Orders
+  // =====================================================
+
+  async function loadOrders() {
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          headers: {
+            "Authorization":
+              "Bearer " + token
+          }
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Orders load failed"
+      );
+
+    }
+
+
+    allOrders =
+      Array.isArray(data)
+        ? data
+        : [];
+
+
+    renderOrders();
+
+  }
+
+
+
+  // =====================================================
+  // Filter
+  // =====================================================
+
+  function filterOrders(status) {
+
+    currentFilter =
+      status;
+
+
+    if (
+      status === "all"
+    ) {
+
+      document.getElementById(
+        "listTitle"
+      ).textContent =
+        "📋 সব Order";
+
+    }
+
+    else {
+
+      document.getElementById(
+        "listTitle"
+      ).textContent =
+        getStatusLabel(status);
+
+    }
+
+
+    renderOrders();
+
+    window.scrollTo({
+      top: document.querySelector(
+        ".section-card"
+      ).offsetTop - 20,
+
+      behavior: "smooth"
+    });
+
+  }
+
+
+
+  // =====================================================
+  // Render Orders
+  // =====================================================
+
+  function renderOrders() {
+
+    const tbody =
+      document.getElementById(
+        "orderTableBody"
+      );
+
+
+    let orders =
+      allOrders;
+
+
+    if (
+      currentFilter !==
+      "all"
+    ) {
+
+      orders =
+        allOrders.filter(
+          order =>
+            order.order_status ===
+            currentFilter
+        );
+
+    }
+
+
+    if (
+      orders.length === 0
+    ) {
+
+      document.getElementById(
+        "tableArea"
+      ).style.display =
+        "block";
+
+
+      tbody.innerHTML = `
+
+        <tr>
+
+          <td
+            colspan="7"
+            class="empty"
+          >
+
+            এই বিভাগে কোনো Order নেই।
+
+          </td>
+
+        </tr>
+
+      `;
+
+      return;
+
+    }
+
+
+    document.getElementById(
+      "tableArea"
+    ).style.display =
+      "block";
+
+
+    tbody.innerHTML =
+      orders.map(
+        order =>
+          createOrderRow(order)
+      ).join("");
+
+  }
+
+
+
+  // =====================================================
+  // Create Order Row
+  // =====================================================
+
+  function createOrderRow(
+    order
+  ) {
+
+    const status =
+      order.order_status;
+
+
+    const statusLabel =
+      getStatusLabel(status);
+
+
+    const statusClass =
+      getStatusClass(status);
+
+
+    const employeeName =
+      order.employee_name ||
+      "Not Assigned";
+
+
+    return `
+
+      <tr>
+
+        <td>
+          <strong>
+            #${escapeHTML(
+              order.id
+            )}
+          </strong>
+        </td>
+
+
+        <td>
+          ${escapeHTML(
+            order.customer_name ||
+            "-"
+          )}
+        </td>
+
+
+        <td>
+          ${escapeHTML(
+            order.customer_phone ||
+            "-"
+          )}
+        </td>
+
+
+        <td>
+          <strong>
+            ৳${Number(
+              order.total_amount || 0
+            ).toFixed(2)}
+          </strong>
+        </td>
+
+
+        <td>
+          ${escapeHTML(
+            employeeName
+          )}
+        </td>
+
+
+        <td>
+
+          <span
+            class="status ${statusClass}"
+          >
+            ${statusLabel}
+          </span>
+
+        </td>
+
+
+        <td>
+
+          <div class="action-area">
+
+            <button
+              class="btn btn-view"
+              onclick="toggleDetails(${order.id})"
+            >
+              👁️ Details
+            </button>
+
+
+            ${
+              adminRole ===
+              "main_admin"
+              &&
+              status ===
+              "new_order"
+
+              ? `
+
+                <button
+                  class="btn btn-approve"
+                  onclick="approveOrder(${order.id})"
+                >
+                  ✅ Approve
+                </button>
+
+              `
+
+              : ""
+            }
+
+
+            ${
+              adminRole ===
+              "main_admin"
+              &&
+              status !==
+              "delivered"
+              &&
+              status !==
+              "cancelled"
+
+              ? `
+
+                <button
+                  class="btn btn-assign"
+                  onclick="assignEmployee(${order.id})"
+                >
+                  👷 Assign
+                </button>
+
+              `
+
+              : ""
+            }
+
+
+            ${
+              adminRole ===
+              "main_admin"
+              &&
+              status !==
+              "delivered"
+              &&
+              status !==
+              "cancelled"
+
+              ? `
+
+                <button
+                  class="btn btn-status"
+                  onclick="changeStatus(${order.id})"
+                >
+                  🔄 Status
+                </button>
+
+              `
+
+              : ""
+            }
+
+
+            <button
+              class="btn btn-print"
+              onclick="printOrder(${order.id})"
+            >
+              🖨️ Print
+            </button>
+
+          </div>
+
+        </td>
+
+      </tr>
+
+
+      <tr
+        id="details-row-${order.id}"
+        class="details-row"
+      >
+
+        <td colspan="7">
+
+          <div
+            id="details-${order.id}"
+            class="details-box"
+          >
+            Details লোড হচ্ছে...
+          </div>
+
+        </td>
+
+      </tr>
+
+    `;
+
+  }
+
+
+
+  // =====================================================
+  // Toggle Details
+  // =====================================================
+
+  async function toggleDetails(
+    orderId
+  ) {
+
+    const row =
+      document.getElementById(
+        "details-row-" + orderId
+      );
+
+
+    if (
+      row.classList.contains(
+        "show"
+      )
+    ) {
+
+      row.classList.remove(
+        "show"
+      );
+
+      return;
+
+    }
+
+
+    row.classList.add(
+      "show"
+    );
+
+
+    const box =
+      document.getElementById(
+        "details-" + orderId
+      );
+
+
+    box.innerHTML =
+      "Order Details লোড হচ্ছে...";
+
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL +
+          "/" +
+          orderId +
+          "/details",
+          {
+            headers: {
+              "Authorization":
+                "Bearer " + token
+            }
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Details load failed"
+        );
+
+      }
+
+
+      renderDetails(
+        box,
+        data.order,
+        data.items
+      );
+
+    }
+
+    catch (error) {
+
+      box.innerHTML = `
+
+        <div class="error">
+          ${escapeHTML(
+            error.message
+          )}
+        </div>
+
+      `;
+
+    }
+
+  }
+
+
+
+  // =====================================================
+  // Render Details
+  // =====================================================
+
+  function renderDetails(
+    box,
+    order,
+    items
+  ) {
+
+    const products =
+      Array.isArray(items)
+        ? items
+        : [];
+
+
+    let itemsHTML = "";
+
+
+    if (
+      products.length === 0
+    ) {
+
+      itemsHTML =
+        "<p>কোনো Product পাওয়া যায়নি।</p>";
+
+    }
+
+    else {
+
+      itemsHTML =
+        products.map(
+          item => `
+
+            <div class="item-line">
+
+              <span>
+
+                <strong>
+                  ${escapeHTML(
+                    item.product_name ||
+                    "-"
+                  )}
+                </strong>
+
+                ×
+                ${Number(
+                  item.quantity || 0
+                )}
+
+                ${
+                  item.unit
+                    ? escapeHTML(
+                        " " +
+                        item.unit
+                      )
+                    : ""
+                }
+
+              </span>
+
+
+              <strong>
+                ৳${Number(
+                  item.subtotal || 0
+                ).toFixed(2)}
+              </strong>
+
+            </div>
+
+          `
+        ).join("");
+
+    }
+
+
+    box.innerHTML = `
+
+      <div class="details-grid">
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Customer
+          </div>
+
+          <div class="detail-value">
+            ${escapeHTML(
+              order.customer_name ||
+              "-"
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Phone
+          </div>
+
+          <div class="detail-value">
+            ${escapeHTML(
+              order.customer_phone ||
+              "-"
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Address
+          </div>
+
+          <div class="detail-value">
+            ${escapeHTML(
+              order.delivery_address ||
+              "-"
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Employee
+          </div>
+
+          <div class="detail-value">
+            ${escapeHTML(
+              order.employee_name ||
+              "Not Assigned"
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Payment Method
+          </div>
+
+          <div class="detail-value">
+            ${escapeHTML(
+              order.payment_method ||
+              "-"
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Payment Status
+          </div>
+
+          <div class="detail-value">
+            ${escapeHTML(
+              order.payment_status ||
+              "-"
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Product Total
+          </div>
+
+          <div class="detail-value">
+            ৳${Number(
+              order.total_amount -
+              (order.delivery_charge || 0)
+            ).toFixed(2)}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Delivery Charge
+          </div>
+
+          <div class="detail-value">
+            ৳${Number(
+              order.delivery_charge || 0
+            ).toFixed(2)}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Grand Total
+          </div>
+
+          <div class="detail-value">
+            ৳${Number(
+              order.total_amount || 0
+            ).toFixed(2)}
+          </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <div class="detail-label">
+            Order Date
+          </div>
+
+          <div class="detail-value">
+            ${formatDate(
+              order.created_at
+            )}
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+      <div class="items-list">
+
+        <strong>
+          🛒 Ordered Products
+        </strong>
+
+        ${itemsHTML}
+
+      </div>
+
+
+      ${
+        order.order_status ===
+        "cancelled"
+
+        ? `
+
+          <div class="error" style="margin-top:15px;">
+
+            <strong>
+              ❌ Cancelled
+            </strong>
+
+            <br>
+
+            Reason:
+            ${escapeHTML(
+              order.cancellation_reason ||
+              "-"
+            )}
+
+          </div>
+
+        `
+
+        : ""
+      }
+
+    `;
+
+  }
+
+
+
+  // =====================================================
+  // Approve Order
+  // =====================================================
+
+  async function approveOrder(
+    orderId
+  ) {
+
+    if (
+      !confirm(
+        `Order #${orderId} Approve করতে চান?`
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL +
+          "/" +
+          orderId +
+          "/approve",
+          {
+
+            method: "PUT",
+
+            headers: {
+
+              "Authorization":
+                "Bearer " + token,
+
+              "Content-Type":
+                "application/json"
+
+            }
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Approve failed"
+        );
+
+      }
+
+
+      showSuccess(
+        `Order #${orderId} সফলভাবে Pending Order-এ গেছে।`
+      );
+
+
+      await loadEverything();
+
+
+      // Approve-এর পর Print
+      printOrder(orderId);
+
+    }
+
+    catch (error) {
+
+      showError(
+        error.message
+      );
+
+    }
+
+  }
+
+
+
+  // =====================================================
+  // Assign Employee
+  // =====================================================
+
+  async function assignEmployee(
+    orderId
+  ) {
+
+    if (
+      employees.length === 0
+    ) {
+
+      alert(
+        "কোনো Active Employee পাওয়া যায়নি।"
+      );
+
+      return;
+
+    }
+
+
+    let options =
+      employees.map(
+        employee =>
+
+          `${employee.id}: ${employee.name}`
+
+      ).join("\n");
+
+
+    const selected =
+      prompt(
+
+        "Employee ID লিখুন:\n\n" +
+        options
+
+      );
+
+
+    if (!selected) {
+      return;
+    }
+
+
+    const employeeId =
+      Number(selected);
+
+
+    if (
+      !Number.isInteger(
+        employeeId
+      )
+    ) {
+
+      alert(
+        "সঠিক Employee ID দিন।"
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL +
+          "/" +
+          orderId +
+          "/assign",
+          {
+
+            method: "PUT",
+
+            headers: {
+
+              "Authorization":
+                "Bearer " + token,
+
+              "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+              JSON.stringify({
+                employee_id:
+                  employeeId
+              })
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Employee assignment failed"
+        );
+
+      }
+
+
+      showSuccess(
+        `Order #${orderId} → ${data.employee_name} Assign হয়েছে।`
+      );
+
+
+      await loadEverything();
+
+    }
+
+    catch (error) {
+
+      showError(
+        error.message
+      );
+
+    }
+
+  }
+
+
+
+  // =====================================================
+  // Change Status
+  // =====================================================
+
+  async function changeStatus(
+    orderId
+  ) {
+
+    const order =
+      allOrders.find(
+        item =>
+          Number(item.id) ===
+          Number(orderId)
+      );
+
+
+    if (!order) {
+
+      alert(
+        "Order পাওয়া যায়নি।"
+      );
+
+      return;
+
+    }
+
+
+    const statusOptions = [
+
+      {
+        value:
+          "pending",
+        label:
+          "⏳ Pending"
+      },
+
+      {
+        value:
+          "processing",
+        label:
+          "🔧 Processing"
+      },
+
+      {
+        value:
+          "ready_for_delivery",
+        label:
+          "📦 Ready for Delivery"
+      },
+
+      {
+        value:
+          "out_for_delivery",
+        label:
+          "🚚 Delivery হচ্ছে"
+      },
+
+      {
+        value:
+          "delivered",
+        label:
+          "✅ Completed"
+      },
+
+      {
+        value:
+          "cancelled",
+        label:
+          "❌ Cancelled"
+      }
+
+    ];
+
+
+    let text =
+      "নতুন Status-এর নাম লিখুন:\n\n";
+
+
+    statusOptions.forEach(
+      item => {
+
+        text +=
+          item.value +
+          " = " +
+          item.label +
+          "\n";
+
+      }
+    );
+
+
+    const newStatus =
+      prompt(
+        text,
+        order.order_status
+      );
+
+
+    if (!newStatus) {
+      return;
+    }
+
+
+    const valid =
+      statusOptions.some(
+        item =>
+          item.value ===
+          newStatus
+      );
+
+
+    if (!valid) {
+
+      alert(
+        "Invalid Status"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !confirm(
+        `Order #${orderId} এর Status "${newStatus}" করতে চান?`
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL +
+          "/" +
+          orderId +
+          "/status",
+          {
+
+            method: "PUT",
+
+            headers: {
+
+              "Authorization":
+                "Bearer " + token,
+
+              "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+              JSON.stringify({
+                order_status:
+                  newStatus
+              })
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Status update failed"
+        );
+
+      }
+
+
+      showSuccess(
+        `Order #${orderId} Status Update হয়েছে।`
+      );
+
+
+      await loadEverything();
+
+    }
+
+    catch (error) {
+
+      showError(
+        error.message
+      );
+
+    }
+
+  }
+
+
+
+  // =====================================================
+  // Print Order
+  // =====================================================
+
+  async function printOrder(
+    orderId
+  ) {
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL +
+          "/" +
+          orderId +
+          "/details",
+          {
+
+            headers: {
+
+              "Authorization":
+                "Bearer " + token
+
+            }
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Print data load failed"
+        );
+
+      }
+
+
+      createPrintWindow(
+        data.order,
+        data.items
+      );
+
+    }
+
+    catch (error) {
+
+      alert(
+        error.message
+      );
+
+    }
+
+  }
+
+
+
+  // =====================================================
+  // Print Slip
+  // =====================================================
+
+  function createPrintWindow(
+    order,
+    items
+  ) {
+
+    const printWindow =
+      window.open(
+        "",
+        "_blank",
+        "width=800,height=700"
+      );
+
+
+    if (!printWindow) {
+
+      alert(
+        "Browser Popup Block করেছে। Popup Allow করুন।"
+      );
+
+      return;
+
+    }
+
+
+    const products =
+      Array.isArray(items)
+        ? items
+        : [];
+
+
+    const itemsHTML =
+      products.map(
+        item => `
+
+          <tr>
+
+            <td>
+              ${escapeHTML(
+                item.product_name ||
+                "-"
+              )}
+            </td>
+
+            <td>
+              ${Number(
+                item.quantity || 0
+              )}
+              ${
+                item.unit
+                  ? escapeHTML(
+                      " " +
+                      item.unit
+                    )
+                  : ""
+              }
+            </td>
+
+            <td>
+              ৳${Number(
+                item.unit_price || 0
+              ).toFixed(2)}
+            </td>
+
+            <td>
+              ৳${Number(
+                item.subtotal || 0
+              ).toFixed(2)}
+            </td>
+
+          </tr>
+
+        `
+      ).join("");
+
+
+    const productTotal =
+      Number(
+        order.total_amount || 0
+      ) -
+      Number(
+        order.delivery_charge || 0
+      );
+
+
+    printWindow.document.write(`
+
+      <!DOCTYPE html>
+
+      <html lang="bn">
+
+      <head>
+
+        <meta charset="UTF-8">
+
+        <title>
+          Order #${escapeHTML(
+            order.id
+          )}
+        </title>
+
+        <style>
+
+          body {
+            font-family: Arial, sans-serif;
+            padding: 25px;
+            color: #111;
+          }
+
+          h1 {
+            text-align: center;
+            margin-bottom: 5px;
+          }
+
+          .company {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+          }
+
+          .info {
+            margin-top: 20px;
+            margin-bottom: 20px;
+          }
+
+          .row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 7px 0;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+          }
+
+          th,
+          td {
+            border: 1px solid #999;
+            padding: 9px;
+            text-align: left;
+          }
+
+          th {
+            background: #eee;
+          }
+
+          .total {
+            margin-top: 20px;
+            width: 300px;
+            margin-left: auto;
+          }
+
+          .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px;
+          }
+
+          .grand {
+            font-size: 18px;
+            font-weight: bold;
+            border-top: 2px solid #111;
+          }
+
+          .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+          }
+
+          @media print {
+
+            body {
+              padding: 10px;
+            }
+
+          }
+
+        </style>
+
+      </head>
+
+
+      <body>
+
+        <div class="company">
+          Friends Corporation
+        </div>
+
+
+        <h1>
+          Order Slip
+        </h1>
+
+
+        <div class="info">
+
+          <div class="row">
+            <strong>Order ID</strong>
+            <span>
+              #${escapeHTML(
+                order.id
+              )}
+            </span>
+          </div>
+
+
+          <div class="row">
+            <strong>Customer</strong>
+            <span>
+              ${escapeHTML(
+                order.customer_name ||
+                "-"
+              )}
+            </span>
+          </div>
+
+
+          <div class="row">
+            <strong>Phone</strong>
+            <span>
+              ${escapeHTML(
+                order.customer_phone ||
+                "-"
+              )}
+            </span>
+          </div>
+
+
+          <div class="row">
+            <strong>Address</strong>
+            <span>
+              ${escapeHTML(
+                order.delivery_address ||
+                "-"
+              )}
+            </span>
+          </div>
+
+
+          <div class="row">
+            <strong>Employee</strong>
+            <span>
+              ${escapeHTML(
+                order.employee_name ||
+                "Not Assigned"
+              )}
+            </span>
+          </div>
+
+
+          <div class="row">
+            <strong>Payment</strong>
+            <span>
+              ${escapeHTML(
+                order.payment_method ||
+                "-"
+              )}
+            </span>
+          </div>
+
+        </div>
+
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Product
+              </th>
+
+              <th>
+                Quantity
+              </th>
+
+              <th>
+                Unit Price
+              </th>
+
+              <th>
+                Subtotal
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            ${itemsHTML}
+
+          </tbody>
+
+        </table>
+
+
+        <div class="total">
+
+          <div class="total-row">
+
+            <span>
+              Product Total
+            </span>
+
+            <strong>
+              ৳${productTotal.toFixed(2)}
+            </strong>
+
+          </div>
+
+
+          <div class="total-row">
+
+            <span>
+              Delivery Charge
+            </span>
+
+            <strong>
+              ৳${Number(
+                order.delivery_charge || 0
+              ).toFixed(2)}
+            </strong>
+
+          </div>
+
+
+          <div class="total-row grand">
+
+            <span>
+              Grand Total
+            </span>
+
+            <strong>
+              ৳${Number(
+                order.total_amount || 0
+              ).toFixed(2)}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="footer">
+
+          Friends Corporation
+
+          <br>
+
+          Order ID:
+          #${escapeHTML(
+            order.id
+          )}
+
+        </div>
+
+
+        <script>
+
+          window.onload = function() {
+
+            window.print();
+
+          };
+
+        <\/script>
+
+      </body>
+
+      </html>
+
+    `);
+
+
+    printWindow.document.close();
+
+  }
+
+
+
+  // =====================================================
+  // Status Label
+  // =====================================================
+
+  function getStatusLabel(
+    status
+  ) {
+
+    const labels = {
+
+      new_order:
+        "🆕 নতুন অর্ডার",
+
+      pending:
+        "⏳ Pending",
+
+      confirmed:
+        "✅ Confirmed",
+
+      processing:
+        "🔧 Processing",
+
+      ready_for_delivery:
+        "📦 Ready for Delivery",
+
+      out_for_delivery:
+        "🚚 Delivery হচ্ছে",
+
+      delivered:
+        "✅ Completed",
+
+      cancelled:
+        "❌ Cancelled"
+
+    };
+
+
+    return (
+      labels[status] ||
+      status ||
+      "-"
+    );
+
+  }
+
+
+
+  // =====================================================
+  // Status Class
+  // =====================================================
+
+  function getStatusClass(
+    status
+  ) {
+
+    const classes = {
+
+      new_order:
+        "status-new",
+
+      pending:
+        "status-pending",
+
+      confirmed:
+        "status-pending",
+
+      processing:
+        "status-processing",
+
+      ready_for_delivery:
+        "status-ready",
+
+      out_for_delivery:
+        "status-delivery",
+
+      delivered:
+        "status-completed",
+
+      cancelled:
+        "status-cancelled"
+
+    };
+
+
+    return (
+      classes[status] ||
+      ""
+    );
+
+  }
+
+
+
+  // =====================================================
+  // Date Format
+  // =====================================================
+
+  function formatDate(
+    value
+  ) {
+
+    if (!value) {
+      return "-";
+    }
+
+
+    const date =
+      new Date(value);
+
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
+      return String(value);
+
+    }
+
+
+    return date.toLocaleString(
+      "bn-BD"
+    );
+
+  }
+
+
+
+  // =====================================================
+  // Success Message
+  // =====================================================
+
+  function showSuccess(
+    message
+  ) {
+
+    document.getElementById(
+      "messageArea"
+    ).innerHTML = `
+
+      <div class="success">
+        ${escapeHTML(message)}
+      </div>
+
+    `;
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+
+    setTimeout(
+      clearMessage,
+      4000
+    );
+
+  }
+
+
+
+  // =====================================================
+  // Error Message
+  // =====================================================
+
+  function showError(
+    message
+  ) {
+
+    document.getElementById(
+      "messageArea"
+    ).innerHTML = `
+
+      <div class="error">
+        ${escapeHTML(message)}
+      </div>
+
+    `;
+
+  }
+
+
+
+  // =====================================================
+  // Clear Message
+  // =====================================================
+
+  function clearMessage() {
+
+    document.getElementById(
+      "messageArea"
+    ).innerHTML = "";
+
+  }
+
+
+
+  // =====================================================
+  // Escape HTML
+  // =====================================================
+
+  function escapeHTML(
+    value
+  ) {
+
+    return String(
+      value ?? ""
+    )
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+
+  // =====================================================
+  // Logout
+  // =====================================================
+
+  function logout() {
+
+    localStorage.removeItem(
+      "admin_token"
+    );
+
+    localStorage.removeItem(
+      "admin"
+    );
+
+
+    window.location.href =
+      "login.html";
+
+  }
+
+</script>
+
+
+</body>
+
+</html>

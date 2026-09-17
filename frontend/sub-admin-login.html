@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Friends Corporation - Sub-Admin Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 25px;
+      font-weight: bold;
+      color: #0b7a3b;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    .role {
+      text-align: center;
+      background: #e8f5e9;
+      color: #0b7a3b;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 22px;
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #0b7a3b;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #075b2d;
+    }
+
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .success {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .back,
+    .admin-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #0b7a3b;
+      text-decoration: none;
+    }
+
+    .admin-link {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .back:hover,
+    .admin-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-box">
+
+    <div class="logo">
+      Friends Corporation
+    </div>
+
+    <h1>👤 Sub-Admin Login</h1>
+
+    <div class="role">
+      🔐 Sub-Admin Access Only
+    </div>
+
+    <form id="loginForm">
+
+      <label for="email">
+        Sub-Admin Email
+      </label>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Sub-Admin Email লিখুন"
+        required
+      >
+
+      <label for="password">
+        Password
+      </label>
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Password লিখুন"
+        required
+      >
+
+      <button
+        type="submit"
+        id="loginButton"
+      >
+        Login
+      </button>
+
+    </form>
+
+    <div
+      id="message"
+      class="message"
+    ></div>
+
+    <a
+      href="frontend/index.html"
+      class="back"
+    >
+      ← Shopping Page
+    </a>
+
+    <a
+      href="admin-login.html"
+      class="admin-link"
+    >
+      👑 Main Admin Login
+    </a>
+
+  </div>
+
+
+  <script>
+
+    const form =
+      document.getElementById("loginForm");
+
+    const message =
+      document.getElementById("message");
+
+    const loginButton =
+      document.getElementById("loginButton");
+
+
+    form.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        const email =
+          document.getElementById("email").value.trim();
+
+        const password =
+          document.getElementById("password").value;
+
+
+        message.style.display = "block";
+        message.className = "message";
+        message.textContent = "Login হচ্ছে...";
+
+        loginButton.disabled = true;
+
+
+        try {
+
+          const response =
+            await fetch(
+              "http://localhost:5000/api/auth/login",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                  email: email,
+                  password: password
+                })
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          console.log(
+            "SUB-ADMIN LOGIN RESPONSE:",
+            data
+          );
+
+
+          if (!response.ok) {
+
+            throw new Error(
+              data.message ||
+              "Login failed"
+            );
+
+          }
+
+
+          if (!data.token) {
+
+            throw new Error(
+              "Login token পাওয়া যায়নি"
+            );
+
+          }
+
+
+          /*
+            এই Login Page শুধুমাত্র
+            Sub-Admin-এর জন্য।
+          */
+
+          if (
+            !data.admin ||
+            data.admin.role !== "sub_admin"
+          ) {
+
+            throw new Error(
+              "এই Login Page শুধুমাত্র Sub-Admin-এর জন্য। Main Admin-এর জন্য আলাদা Login ব্যবহার করুন।"
+            );
+
+          }
+
+
+          /*
+            পুরোনো Login Data পরিষ্কার
+          */
+
+          localStorage.removeItem("admin_token");
+          localStorage.removeItem("admin_role");
+          localStorage.removeItem("admin_name");
+
+
+          /*
+            Sub-Admin Login Data সংরক্ষণ
+          */
+
+          localStorage.setItem(
+            "admin_token",
+            data.token
+          );
+
+          localStorage.setItem(
+            "admin_role",
+            "sub_admin"
+          );
+
+          localStorage.setItem(
+            "admin_name",
+            data.admin.name || ""
+          );
+
+
+          message.className =
+            "message success";
+
+          message.textContent =
+            "Sub-Admin Login সফল! Dashboard খুলছে...";
+
+
+          setTimeout(function() {
+
+            window.location.href =
+              "admin/index.html";
+
+          }, 700);
+
+        }
+
+
+        catch (error) {
+
+          console.error(
+            "SUB-ADMIN LOGIN ERROR:",
+            error
+          );
+
+
+          message.className =
+            "message error";
+
+          message.textContent =
+            error.message;
+
+          loginButton.disabled = false;
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,3354 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Friends Corporation - Admin Panel</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    /* ================= HEADER ================= */
+
+    header {
+      background: #0b7a3b;
+      color: white;
+      padding: 18px 20px;
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .logout {
+      background: white;
+      color: #0b7a3b;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .logout:hover {
+      opacity: 0.9;
+    }
+
+    /* ================= CONTAINER ================= */
+
+    .container {
+      max-width: 1100px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    /* ================= WELCOME ================= */
+
+    .welcome {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 20px;
+    }
+
+    .welcome h1 {
+      margin-top: 0;
+      color: #0b7a3b;
+    }
+
+    .welcome p {
+      margin-bottom: 0;
+      color: #555;
+    }
+
+    /* ================= BUSINESS SUMMARY ================= */
+
+    .business-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .summary-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .summary-title {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: bold;
+      line-height: 1.5;
+    }
+
+    .summary-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+    .summary-note {
+      margin-top: 7px;
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* ================= MENU ================= */
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .menu-card {
+      background: white;
+      padding: 25px 15px;
+      border-radius: 12px;
+      text-align: center;
+      text-decoration: none;
+      color: #222;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 14px rgba(0,0,0,0.12);
+    }
+
+    .icon {
+      font-size: 35px;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .menu-note {
+      margin-top: 7px;
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* ================= MENU COLORS ================= */
+
+    .orders-card {
+      border-top: 4px solid #0d6efd;
+    }
+
+    .products-card {
+      border-top: 4px solid #fd7e14;
+    }
+
+    .employee-card {
+      border-top: 4px solid #198754;
+    }
+
+    .employee-dashboard-card {
+      border-top: 4px solid #20c997;
+    }
+
+    .shopping-card {
+      border-top: 4px solid #6f42c1;
+    }
+
+    .customer-orders-card {
+      border-top: 4px solid #dc3545;
+    }
+
+    .reports-card {
+      border-top: 4px solid #6610f2;
+    }
+
+    /* ================= ALL EMPLOYEE REPORT CARD ================= */
+
+    .employee-report-card {
+      border-top: 4px solid #ff9800;
+    }
+
+    /* ================= INFO ================= */
+
+    .info-box {
+      margin-top: 25px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .info-box h2 {
+      margin-top: 0;
+      color: #0b7a3b;
+    }
+
+    .info-box p {
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+
+    /* ================= ERROR ================= */
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    /* ================= REPORT MODAL ================= */
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.65);
+      overflow-y: auto;
+      padding: 25px 15px;
+    }
+
+    .modal-content {
+      background: #fff;
+      max-width: 1250px;
+      margin: auto;
+      border-radius: 15px;
+      padding: 22px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 15px;
+      margin-bottom: 18px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #0b7a3b;
+    }
+
+    .close-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* ================= REPORT SUMMARY ================= */
+
+    .report-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .report-summary-card {
+      background: #f8f9fa;
+      border: 1px solid #e1e1e1;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .report-summary-title {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .report-summary-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+    /* ================= SEARCH ================= */
+
+    .report-tools {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 250px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .refresh-btn,
+    .print-btn {
+      border: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .refresh-btn {
+      background: #0d6efd;
+      color: white;
+    }
+
+    .print-btn {
+      background: #198754;
+      color: white;
+    }
+
+    /* ================= TABLE ================= */
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1250px;
+      background: white;
+    }
+
+    .report-table th {
+      background: #0b7a3b;
+      color: white;
+      padding: 11px 8px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .report-table td {
+      border-bottom: 1px solid #eee;
+      padding: 10px 8px;
+      font-size: 12px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .report-table tr:hover {
+      background: #f8f9fa;
+    }
+
+    .employee-name {
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+    .money {
+      font-weight: bold;
+    }
+
+    .profit {
+      color: #198754;
+      font-weight: bold;
+    }
+
+    .commission {
+      color: #6f42c1;
+      font-weight: bold;
+    }
+
+    .company-profit {
+      color: #0b7a3b;
+      font-weight: bold;
+    }
+
+    .details-btn {
+      background: #6610f2;
+      color: white;
+      border: none;
+      padding: 7px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    /* ================= LOADING ================= */
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+      font-weight: bold;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    /* ================= DETAIL MODAL ================= */
+
+    .detail-modal-content {
+      max-width: 900px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .detail-card {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .detail-card-title {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 7px;
+    }
+
+    .detail-card-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+    .detail-section {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .detail-section h3 {
+      margin-top: 0;
+      color: #0b7a3b;
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media (max-width: 900px) {
+
+      .business-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .menu {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .report-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .detail-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      header {
+        padding: 15px;
+      }
+
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .business-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .menu {
+        grid-template-columns: 1fr;
+      }
+
+      .report-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .logo {
+        font-size: 19px;
+      }
+
+      .modal {
+        padding: 10px;
+      }
+
+      .modal-content {
+        padding: 15px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+  <div class="header-content">
+
+    <div
+      class="logo"
+      id="panelTitle"
+    >
+      Friends Corporation — Admin
+    </div>
+
+
+    <button
+      class="logout"
+      onclick="logout()"
+    >
+      Logout
+    </button>
+
+  </div>
+
+</header>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+
+  <!-- ================= WELCOME ================= -->
+
+  <div class="welcome">
+
+    <h1 id="dashboardTitle">
+      👑 Admin Dashboard
+    </h1>
+
+    <p id="adminInfo">
+      Admin তথ্য লোড হচ্ছে...
+    </p>
+
+  </div>
+
+
+
+  <!-- ================= BUSINESS SUMMARY ================= -->
+
+  <div class="business-summary">
+
+
+    <!-- CURRENT STOCK BUYING VALUE -->
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        📦
+      </div>
+
+      <div class="summary-title">
+        বর্তমানে দোকানে থাকা মালের ক্রয়মূল্য
+      </div>
+
+      <div
+        class="summary-value"
+        id="currentStockCost"
+      >
+        ৳0.00
+      </div>
+
+      <div class="summary-note">
+        বর্তমান Stock × Buying Price
+      </div>
+
+    </div>
+
+
+
+    <!-- TOTAL SALES -->
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        🛒
+      </div>
+
+      <div class="summary-title">
+        মোট বিক্রি
+      </div>
+
+      <div
+        class="summary-value"
+        id="totalSales"
+      >
+        ৳0.00
+      </div>
+
+      <div class="summary-note">
+        শুধু Delivered Order
+      </div>
+
+    </div>
+
+
+
+    <!-- TOTAL PROFIT -->
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        📈
+      </div>
+
+      <div class="summary-title">
+        মোট লাভ
+      </div>
+
+      <div
+        class="summary-value"
+        id="totalProfit"
+      >
+        ৳0.00
+      </div>
+
+      <div class="summary-note">
+        Sales − Product Cost
+      </div>
+
+    </div>
+
+
+
+    <!-- CURRENT STOCK SELLING VALUE -->
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        🏪
+      </div>
+
+      <div class="summary-title">
+        অবশিষ্ট মালের বিক্রয়মূল্য
+      </div>
+
+      <div
+        class="summary-value"
+        id="currentStockSalesValue"
+      >
+        ৳0.00
+      </div>
+
+      <div class="summary-note">
+        বর্তমান Stock × Selling Price
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- =================================================
+       MANAGEMENT MENU
+  ================================================== -->
+
+  <div class="menu">
+
+
+    <!-- ================= ORDERS ================= -->
+
+    <a
+      href="order-management.html"
+      class="menu-card orders-card"
+    >
+
+      <div class="icon">
+        📦
+      </div>
+
+      <div class="title">
+        Orders
+      </div>
+
+      <div class="menu-note">
+        Order দেখা ও Management
+      </div>
+
+    </a>
+
+
+
+    <!-- ================= PRODUCTS ================= -->
+
+    <a
+      href="products.html"
+      class="menu-card products-card"
+    >
+
+      <div class="icon">
+        🛍️
+      </div>
+
+      <div class="title">
+        Product Management
+      </div>
+
+      <div class="menu-note">
+        Product ও Stock Management
+      </div>
+
+    </a>
+
+
+
+    <!-- ================= EMPLOYEE ================= -->
+
+    <a
+      href="employee.html"
+      class="menu-card employee-card"
+    >
+
+      <div class="icon">
+        👷
+      </div>
+
+      <div class="title">
+        Employee Management
+      </div>
+
+      <div class="menu-note">
+        Employee তথ্য ও Management
+      </div>
+
+    </a>
+
+
+
+    <!-- ================= EMPLOYEE DASHBOARD ================= -->
+
+    <a
+      href="employee-dashboard.html"
+      class="menu-card employee-dashboard-card"
+    >
+
+      <div class="icon">
+        🚚
+      </div>
+
+      <div class="title">
+        Employee Dashboard
+      </div>
+
+      <div class="menu-note">
+        Employee-এর কাজ ও Order
+      </div>
+
+    </a>
+
+
+
+    <!-- ================= ALL EMPLOYEE REPORT ================= -->
+
+    <div
+      class="menu-card employee-report-card"
+      onclick="openEmployeeReport()"
+    >
+
+      <div class="icon">
+        📊
+      </div>
+
+      <div class="title">
+        All Employee Report
+      </div>
+
+      <div class="menu-note">
+        সব Employee-এর Sales, Profit ও Commission
+      </div>
+
+    </div>
+
+
+
+    <!-- ================= SHOPPING ================= -->
+
+    <a
+      href="../index.html"
+      class="menu-card shopping-card"
+    >
+
+      <div class="icon">
+        🛒
+      </div>
+
+      <div class="title">
+        Shopping
+      </div>
+
+      <div class="menu-note">
+        Customer Shopping Page
+      </div>
+
+    </a>
+
+
+
+    <!-- ================= CUSTOMER ORDERS ================= -->
+
+    <a
+      href="../my-orders.html"
+      class="menu-card customer-orders-card"
+    >
+
+      <div class="icon">
+        👤
+      </div>
+
+      <div class="title">
+        Customer Orders
+      </div>
+
+      <div class="menu-note">
+        Customer Order দেখা
+      </div>
+
+    </a>
+
+
+
+    <!-- ================= REPORTS ================= -->
+
+    <a
+      href="reports.html"
+      class="menu-card reports-card"
+    >
+
+      <div class="icon">
+        📊
+      </div>
+
+      <div class="title">
+        হিসাব ও রিপোর্ট
+      </div>
+
+      <div class="menu-note">
+        Sales, Purchase, Profit ও Stock Report
+      </div>
+
+    </a>
+
+
+  </div>
+
+
+
+  <!-- ================= INFORMATION ================= -->
+
+  <div class="info-box">
+
+    <h2>
+      ℹ️ Dashboard
+    </h2>
+
+    <p>
+
+      Employee এবং Order-এর বিস্তারিত তথ্য দেখতে
+      উপরের সংশ্লিষ্ট Management বাটনে ক্লিক করুন।
+
+      Dashboard-এ বিস্তারিত Employee বা Order তালিকা
+      সরাসরি দেখানো হবে না।
+
+      <br><br>
+
+      📊 <strong>All Employee Report</strong> থেকে
+      সকল Employee-এর Order, Sales, Purchase Cost,
+      Gross Profit, Commission এবং Company Net Profit
+      দেখা যাবে।
+
+      <br><br>
+
+      📊 <strong>হিসাব ও রিপোর্ট</strong> থেকে
+      নির্দিষ্ট তারিখ অনুযায়ী Sales, Purchase,
+      Profit এবং Stock-এর বিস্তারিত হিসাব দেখা,
+      Print এবং PDF করার ব্যবস্থা থাকবে।
+
+    </p>
+
+  </div>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     ALL EMPLOYEE REPORT MODAL
+====================================================== -->
+
+<div
+  class="modal"
+  id="employeeReportModal"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h2>
+        📊 All Employee Report
+      </h2>
+
+      <button
+        class="close-btn"
+        onclick="closeEmployeeReport()"
+      >
+        ✕ Close
+      </button>
+
+    </div>
+
+
+
+    <!-- ================= REPORT SUMMARY ================= -->
+
+    <div class="report-summary">
+
+
+      <div class="report-summary-card">
+
+        <div class="report-summary-title">
+          👷 মোট Employee
+        </div>
+
+        <div
+          class="report-summary-value"
+          id="reportEmployeeCount"
+        >
+          0
+        </div>
+
+      </div>
+
+
+
+      <div class="report-summary-card">
+
+        <div class="report-summary-title">
+          📦 মোট Order
+        </div>
+
+        <div
+          class="report-summary-value"
+          id="reportOrderCount"
+        >
+          0
+        </div>
+
+      </div>
+
+
+
+      <div class="report-summary-card">
+
+        <div class="report-summary-title">
+          🛒 মোট Sales
+        </div>
+
+        <div
+          class="report-summary-value"
+          id="reportTotalSales"
+        >
+          ৳0.00
+        </div>
+
+      </div>
+
+
+
+      <div class="report-summary-card">
+
+        <div class="report-summary-title">
+          📈 Gross Profit
+        </div>
+
+        <div
+          class="report-summary-value"
+          id="reportGrossProfit"
+        >
+          ৳0.00
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- ================= TOOLS ================= -->
+
+    <div class="report-tools">
+
+      <input
+        type="text"
+        id="employeeSearch"
+        class="search-input"
+        placeholder="🔎 Employee ID, নাম, মোবাইল বা Zone দিয়ে Search করুন..."
+        oninput="filterEmployeeReport()"
+      >
+
+
+      <button
+        class="refresh-btn"
+        onclick="loadAllEmployeeReport()"
+      >
+        🔄 Refresh
+      </button>
+
+
+      <button
+        class="print-btn"
+        onclick="printEmployeeReport()"
+      >
+        🖨️ Print
+      </button>
+
+    </div>
+
+
+
+    <!-- ================= TABLE ================= -->
+
+    <div
+      id="employeeReportLoading"
+      class="loading"
+    >
+      Employee Report লোড হচ্ছে...
+    </div>
+
+
+    <div
+      class="table-wrapper"
+      id="employeeTableWrapper"
+      style="display:none;"
+    >
+
+      <table class="report-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              ID
+            </th>
+
+            <th>
+              Employee
+            </th>
+
+            <th>
+              Mobile
+            </th>
+
+            <th>
+              Zone
+            </th>
+
+            <th>
+              Commission %
+            </th>
+
+            <th>
+              Total Orders
+            </th>
+
+            <th>
+              Delivered
+            </th>
+
+            <th>
+              Cancelled
+            </th>
+
+            <th>
+              Ready
+            </th>
+
+            <th>
+              Out For Delivery
+            </th>
+
+            <th>
+              Sales
+            </th>
+
+            <th>
+              Purchase Cost
+            </th>
+
+            <th>
+              Gross Profit
+            </th>
+
+            <th>
+              Commission
+            </th>
+
+            <th>
+              Company Net Profit
+            </th>
+
+            <th>
+              Details
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody
+          id="employeeReportBody"
+        >
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <div
+      id="employeeReportEmpty"
+      class="empty"
+      style="display:none;"
+    >
+      কোনো Employee পাওয়া যায়নি।
+    </div>
+
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     EMPLOYEE DETAIL MODAL
+====================================================== -->
+
+<div
+  class="modal"
+  id="employeeDetailModal"
+>
+
+  <div
+    class="modal-content detail-modal-content"
+  >
+
+    <div class="modal-header">
+
+      <h2 id="detailEmployeeTitle">
+        👷 Employee Details
+      </h2>
+
+      <button
+        class="close-btn"
+        onclick="closeEmployeeDetails()"
+      >
+        ✕ Close
+      </button>
+
+    </div>
+
+
+    <div
+      id="employeeDetailLoading"
+      class="loading"
+    >
+      Employee Details লোড হচ্ছে...
+    </div>
+
+
+    <div
+      id="employeeDetailContent"
+      style="display:none;"
+    >
+
+
+      <!-- ================= BASIC INFO ================= -->
+
+      <div class="detail-section">
+
+        <h3>
+          👤 Employee Information
+        </h3>
+
+        <div id="employeeBasicInfo"></div>
+
+      </div>
+
+
+
+      <!-- ================= PERFORMANCE ================= -->
+
+      <div class="detail-section">
+
+        <h3>
+          📊 Performance
+        </h3>
+
+
+        <div class="detail-grid">
+
+
+          <div class="detail-card">
+
+            <div class="detail-card-title">
+              Total Orders
+            </div>
+
+            <div
+              class="detail-card-value"
+              id="detailTotalOrders"
+            >
+              0
+            </div>
+
+          </div>
+
+
+
+          <div class="detail-card">
+
+            <div class="detail-card-title">
+              Delivered
+            </div>
+
+            <div
+              class="detail-card-value"
+              id="detailDelivered"
+            >
+              0
+            </div>
+
+          </div>
+
+
+
+          <div class="detail-card">
+
+            <div class="detail-card-title">
+              Cancelled
+            </div>
+
+            <div
+              class="detail-card-value"
+              id="detailCancelled"
+            >
+              0
+            </div>
+
+          </div>
+
+
+
+          <div class="detail-card">
+
+            <div class="detail-card-title">
+              Sales
+            </div>
+
+            <div
+              class="detail-card-value"
+              id="detailSales"
+            >
+              ৳0.00
+            </div>
+
+          </div>
+
+
+
+          <div class="detail-card">
+
+            <div class="detail-card-title">
+              Purchase Cost
+            </div>
+
+            <div
+              class="detail-card-value"
+              id="detailPurchaseCost"
+            >
+              ৳0.00
+            </div>
+
+          </div>
+
+
+
+          <div class="detail-card">
+
+            <div class="detail-card-title">
+              Gross Profit
+            </div>
+
+            <div
+              class="detail-card-value"
+              id="detailGrossProfit"
+            >
+              ৳0.00
+            </div>
+
+          </div>
+
+
+
+          <div class="detail-card">
+
+            <div class="detail-card-title">
+              Commission
+            </div>
+
+            <div
+              class="detail-card-value"
+              id="detailCommission"
+            >
+              ৳0.00
+            </div>
+
+          </div>
+
+
+
+          <div class="detail-card">
+
+            <div class="detail-card-title">
+              Company Net Profit
+            </div>
+
+            <div
+              class="detail-card-value"
+              id="detailCompanyProfit"
+            >
+              ৳0.00
+            </div>
+
+          </div>
+
+
+
+          <div class="detail-card">
+
+            <div class="detail-card-title">
+              Commission %
+            </div>
+
+            <div
+              class="detail-card-value"
+              id="detailCommissionPercent"
+            >
+              0%
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+/* =========================================
+   API
+========================================= */
+
+const AUTH_URL =
+  "http://localhost:5000/api/auth/me";
+
+
+const PROFIT_URL =
+  "http://localhost:5000/api/profit";
+
+
+const EMPLOYEE_REPORT_URL =
+  "http://localhost:5000/api/employee-performance";
+
+
+
+/* =========================================
+   TOKEN
+========================================= */
+
+let token =
+  localStorage.getItem("admin_token");
+
+
+
+/* =========================================
+   EMPLOYEE REPORT DATA
+========================================= */
+
+let allEmployeeData = [];
+
+
+
+/* =========================================
+   LOGIN CHECK
+========================================= */
+
+if (!token) {
+
+  document.getElementById(
+    "adminInfo"
+  ).innerHTML = `
+
+    <div class="error">
+
+      ⚠️ Admin Login করা নেই।
+
+      <br><br>
+
+      <a href="../admin-login.html">
+        🔐 Admin Login
+      </a>
+
+    </div>
+
+  `;
+
+}
+
+else {
+
+  loadAdminInfo();
+
+  loadBusinessSummary();
+
+}
+
+
+
+/* =========================================
+   ADMIN INFORMATION
+========================================= */
+
+async function loadAdminInfo() {
+
+  try {
+
+    const response =
+      await fetch(
+        AUTH_URL,
+        {
+
+          method: "GET",
+
+          headers: {
+
+            "Authorization":
+              "Bearer " + token
+
+          }
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      response.status === 401 ||
+      response.status === 403
+    ) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Admin information failed"
+      );
+
+    }
+
+
+    if (!data.admin) {
+
+      return;
+
+    }
+
+
+    const role =
+      data.admin.role;
+
+
+    let roleLabel =
+      "Admin";
+
+
+    /* ================= MAIN ADMIN ================= */
+
+    if (
+      role === "main_admin"
+    ) {
+
+      roleLabel =
+        "Main Admin";
+
+
+      document.getElementById(
+        "panelTitle"
+      ).textContent =
+        "Friends Corporation — Main Admin";
+
+
+      document.getElementById(
+        "dashboardTitle"
+      ).textContent =
+        "👑 Main Admin Dashboard";
+
+    }
+
+
+    /* ================= SUB ADMIN ================= */
+
+    else if (
+      role === "sub_admin"
+    ) {
+
+      roleLabel =
+        "Sub-Admin";
+
+
+      document.getElementById(
+        "panelTitle"
+      ).textContent =
+        "Friends Corporation — Sub-Admin";
+
+
+      document.getElementById(
+        "dashboardTitle"
+      ).textContent =
+        "👤 Sub-Admin Dashboard";
+
+    }
+
+
+    else {
+
+      document.getElementById(
+        "panelTitle"
+      ).textContent =
+        "Friends Corporation — Admin";
+
+
+      document.getElementById(
+        "dashboardTitle"
+      ).textContent =
+        "👑 Admin Dashboard";
+
+    }
+
+
+    document.getElementById(
+      "adminInfo"
+    ).innerHTML =
+
+      "স্বাগতম, <strong>" +
+
+      escapeHTML(
+        data.admin.name
+      ) +
+
+      "</strong> | Role: <strong>" +
+
+      escapeHTML(
+        roleLabel
+      ) +
+
+      "</strong>";
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "ADMIN INFO ERROR:",
+      error
+    );
+
+
+    document.getElementById(
+      "adminInfo"
+    ).textContent =
+      "Admin তথ্য লোড করা যায়নি।";
+
+  }
+
+}
+
+
+
+/* =========================================
+   BUSINESS SUMMARY
+========================================= */
+
+async function loadBusinessSummary() {
+
+  try {
+
+    const response =
+      await fetch(
+        PROFIT_URL +
+        "/business-summary",
+        {
+
+          method: "GET",
+
+          headers: {
+
+            "Authorization":
+              "Bearer " + token,
+
+            "Content-Type":
+              "application/json"
+
+          }
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      response.status === 401 ||
+      response.status === 403
+    ) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Business Summary load failed"
+      );
+
+    }
+
+
+    /* ================= STOCK COST ================= */
+
+    document.getElementById(
+      "currentStockCost"
+    ).textContent =
+
+      "৳" +
+
+      Number(
+        data.current_stock_cost || 0
+      ).toFixed(2);
+
+
+
+    /* ================= SALES ================= */
+
+    document.getElementById(
+      "totalSales"
+    ).textContent =
+
+      "৳" +
+
+      Number(
+        data.total_sales || 0
+      ).toFixed(2);
+
+
+
+    /* ================= PROFIT ================= */
+
+    document.getElementById(
+      "totalProfit"
+    ).textContent =
+
+      "৳" +
+
+      Number(
+        data.total_profit || 0
+      ).toFixed(2);
+
+
+
+    /* ================= STOCK SALES VALUE ================= */
+
+    document.getElementById(
+      "currentStockSalesValue"
+    ).textContent =
+
+      "৳" +
+
+      Number(
+        data.current_stock_sales_value || 0
+      ).toFixed(2);
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "BUSINESS SUMMARY ERROR:",
+      error
+    );
+
+
+    document.getElementById(
+      "currentStockCost"
+    ).textContent =
+      "Error";
+
+
+    document.getElementById(
+      "totalSales"
+    ).textContent =
+      "Error";
+
+
+    document.getElementById(
+      "totalProfit"
+    ).textContent =
+      "Error";
+
+
+    document.getElementById(
+      "currentStockSalesValue"
+    ).textContent =
+      "Error";
+
+  }
+
+}
+
+
+
+/* =====================================================
+   OPEN ALL EMPLOYEE REPORT
+===================================================== */
+
+function openEmployeeReport() {
+
+  if (!token) {
+
+    alert(
+      "Admin Login প্রয়োজন।"
+    );
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "employeeReportModal"
+  ).style.display = "block";
+
+
+  loadAllEmployeeReport();
+
+}
+
+
+
+/* =====================================================
+   CLOSE ALL EMPLOYEE REPORT
+===================================================== */
+
+function closeEmployeeReport() {
+
+  document.getElementById(
+    "employeeReportModal"
+  ).style.display = "none";
+
+}
+
+
+
+/* =====================================================
+   LOAD ALL EMPLOYEE REPORT
+===================================================== */
+
+async function loadAllEmployeeReport() {
+
+  const loading =
+    document.getElementById(
+      "employeeReportLoading"
+    );
+
+  const tableWrapper =
+    document.getElementById(
+      "employeeTableWrapper"
+    );
+
+  const empty =
+    document.getElementById(
+      "employeeReportEmpty"
+    );
+
+
+  loading.style.display = "block";
+
+  tableWrapper.style.display = "none";
+
+  empty.style.display = "none";
+
+
+  try {
+
+    const response =
+      await fetch(
+        EMPLOYEE_REPORT_URL +
+        "/all",
+        {
+
+          method: "GET",
+
+          headers: {
+
+            "Authorization":
+              "Bearer " + token,
+
+            "Content-Type":
+              "application/json"
+
+          }
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      response.status === 401 ||
+      response.status === 403
+    ) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Employee Report load failed"
+      );
+
+    }
+
+
+    /*
+      Backend যদি সরাসরি Array পাঠায়
+      অথবা {employees: []} / {data: []}
+      পাঠায়—দুটিই handle করা হচ্ছে।
+    */
+
+    if (Array.isArray(data)) {
+
+      allEmployeeData =
+        data;
+
+    }
+
+    else if (
+      Array.isArray(
+        data.employees
+      )
+    ) {
+
+      allEmployeeData =
+        data.employees;
+
+    }
+
+    else if (
+      Array.isArray(
+        data.data
+      )
+    ) {
+
+      allEmployeeData =
+        data.data;
+
+    }
+
+    else {
+
+      allEmployeeData = [];
+
+    }
+
+
+    loading.style.display = "none";
+
+
+    updateReportSummary(
+      allEmployeeData
+    );
+
+
+    renderEmployeeReport(
+      allEmployeeData
+    );
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "ALL EMPLOYEE REPORT ERROR:",
+      error
+    );
+
+
+    loading.style.display = "none";
+
+    empty.style.display = "block";
+
+    empty.innerHTML =
+
+      "❌ Employee Report লোড করা যায়নি।" +
+
+      "<br><br>" +
+
+      escapeHTML(
+        error.message
+      );
+
+  }
+
+}
+
+
+
+/* =====================================================
+   REPORT SUMMARY
+===================================================== */
+
+function updateReportSummary(
+  employees
+) {
+
+  const employeeCount =
+    employees.length;
+
+
+  let totalOrders = 0;
+
+  let totalSales = 0;
+
+  let totalProfit = 0;
+
+
+  employees.forEach(
+    employee => {
+
+      totalOrders +=
+        getNumber(
+          employee.total_orders,
+          employee.order_count,
+          employee.totalOrders
+        );
+
+
+      totalSales +=
+        getNumber(
+          employee.total_sales,
+          employee.sales,
+          employee.totalSales
+        );
+
+
+      totalProfit +=
+        getNumber(
+          employee.gross_profit,
+          employee.profit,
+          employee.total_profit,
+          employee.grossProfit
+        );
+
+    }
+  );
+
+
+  document.getElementById(
+    "reportEmployeeCount"
+  ).textContent =
+    employeeCount;
+
+
+  document.getElementById(
+    "reportOrderCount"
+  ).textContent =
+    totalOrders;
+
+
+  document.getElementById(
+    "reportTotalSales"
+  ).textContent =
+    formatMoney(
+      totalSales
+    );
+
+
+  document.getElementById(
+    "reportGrossProfit"
+  ).textContent =
+    formatMoney(
+      totalProfit
+    );
+
+}
+
+
+
+/* =====================================================
+   RENDER EMPLOYEE REPORT
+===================================================== */
+
+function renderEmployeeReport(
+  employees
+) {
+
+  const tbody =
+    document.getElementById(
+      "employeeReportBody"
+    );
+
+
+  const tableWrapper =
+    document.getElementById(
+      "employeeTableWrapper"
+    );
+
+
+  const empty =
+    document.getElementById(
+      "employeeReportEmpty"
+    );
+
+
+  tbody.innerHTML = "";
+
+
+  if (
+    !employees ||
+    employees.length === 0
+  ) {
+
+    tableWrapper.style.display =
+      "none";
+
+    empty.style.display =
+      "block";
+
+    return;
+
+  }
+
+
+  tableWrapper.style.display =
+    "block";
+
+  empty.style.display =
+    "none";
+
+
+  employees.forEach(
+    employee => {
+
+      const employeeId =
+        employee.employee_id ??
+        employee.id ??
+        "";
+
+
+      const name =
+        employee.employee_name ??
+        employee.name ??
+        "Unknown";
+
+
+      const mobile =
+        employee.mobile ??
+        employee.phone ??
+        "";
+
+
+      const zone =
+        employee.zone ??
+        employee.area ??
+        employee.zone_name ??
+        "";
+
+
+      const commissionPercent =
+        getNumber(
+          employee.commission_percent,
+          employee.commission_percentage,
+          employee.commission_rate
+        );
+
+
+      const totalOrders =
+        getNumber(
+          employee.total_orders,
+          employee.order_count,
+          employee.totalOrders
+        );
+
+
+      const delivered =
+        getNumber(
+          employee.delivered_orders,
+          employee.delivered,
+          employee.completed_orders
+        );
+
+
+      const cancelled =
+        getNumber(
+          employee.cancelled_orders,
+          employee.cancelled
+        );
+
+
+      const ready =
+        getNumber(
+          employee.ready_orders,
+          employee.ready
+        );
+
+
+      const outForDelivery =
+        getNumber(
+          employee.out_for_delivery_orders,
+          employee.out_for_delivery
+        );
+
+
+      const sales =
+        getNumber(
+          employee.total_sales,
+          employee.sales,
+          employee.totalSales
+        );
+
+
+      const purchaseCost =
+        getNumber(
+          employee.purchase_cost,
+          employee.total_purchase_cost,
+          employee.purchaseCost
+        );
+
+
+      const grossProfit =
+        getNumber(
+          employee.gross_profit,
+          employee.profit,
+          employee.total_profit,
+          employee.grossProfit
+        );
+
+
+      const commission =
+        getNumber(
+          employee.commission,
+          employee.total_commission
+        );
+
+
+      const companyNetProfit =
+        getNumber(
+          employee.company_net_profit,
+          employee.company_profit,
+          employee.net_profit
+        );
+
+
+      const row =
+        document.createElement(
+          "tr"
+        );
+
+
+      row.dataset.search =
+        (
+
+          employeeId +
+          " " +
+          name +
+          " " +
+          mobile +
+          " " +
+          zone
+
+        ).toLowerCase();
+
+
+      row.innerHTML = `
+
+        <td>
+          ${escapeHTML(employeeId)}
+        </td>
+
+
+        <td class="employee-name">
+          ${escapeHTML(name)}
+        </td>
+
+
+        <td>
+          ${escapeHTML(mobile)}
+        </td>
+
+
+        <td>
+          ${escapeHTML(zone)}
+        </td>
+
+
+        <td>
+          ${commissionPercent.toFixed(2)}%
+        </td>
+
+
+        <td>
+          ${totalOrders}
+        </td>
+
+
+        <td>
+          ${delivered}
+        </td>
+
+
+        <td>
+          ${cancelled}
+        </td>
+
+
+        <td>
+          ${ready}
+        </td>
+
+
+        <td>
+          ${outForDelivery}
+        </td>
+
+
+        <td class="money">
+          ${formatMoney(sales)}
+        </td>
+
+
+        <td class="money">
+          ${formatMoney(purchaseCost)}
+        </td>
+
+
+        <td class="profit">
+          ${formatMoney(grossProfit)}
+        </td>
+
+
+        <td class="commission">
+          ${formatMoney(commission)}
+        </td>
+
+
+        <td class="company-profit">
+          ${formatMoney(companyNetProfit)}
+        </td>
+
+
+        <td>
+
+          <button
+            class="details-btn"
+            onclick="viewEmployeeDetails(${Number(employeeId)})"
+          >
+            👁️ Details
+          </button>
+
+        </td>
+
+      `;
+
+
+      tbody.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+
+/* =====================================================
+   SEARCH / FILTER
+===================================================== */
+
+function filterEmployeeReport() {
+
+  const search =
+    document.getElementById(
+      "employeeSearch"
+    ).value
+      .trim()
+      .toLowerCase();
+
+
+  const rows =
+    document.querySelectorAll(
+      "#employeeReportBody tr"
+    );
+
+
+  let visibleCount = 0;
+
+
+  rows.forEach(
+    row => {
+
+      const text =
+        row.dataset.search ||
+        "";
+
+
+      if (
+        !search ||
+        text.includes(search)
+      ) {
+
+        row.style.display =
+          "";
+
+        visibleCount++;
+
+      }
+
+      else {
+
+        row.style.display =
+          "none";
+
+      }
+
+    }
+  );
+
+
+  const empty =
+    document.getElementById(
+      "employeeReportEmpty"
+    );
+
+
+  if (
+    rows.length > 0 &&
+    visibleCount === 0
+  ) {
+
+    empty.style.display =
+      "block";
+
+    empty.textContent =
+      "🔎 Search অনুযায়ী কোনো Employee পাওয়া যায়নি।";
+
+  }
+
+  else {
+
+    empty.style.display =
+      "none";
+
+  }
+
+}
+
+
+
+/* =====================================================
+   EMPLOYEE DETAILS
+===================================================== */
+
+async function viewEmployeeDetails(
+  employeeId
+) {
+
+  if (!employeeId) {
+
+    alert(
+      "Employee ID পাওয়া যায়নি।"
+    );
+
+    return;
+
+  }
+
+
+  const modal =
+    document.getElementById(
+      "employeeDetailModal"
+    );
+
+
+  const loading =
+    document.getElementById(
+      "employeeDetailLoading"
+    );
+
+
+  const content =
+    document.getElementById(
+      "employeeDetailContent"
+    );
+
+
+  modal.style.display =
+    "block";
+
+
+  loading.style.display =
+    "block";
+
+
+  content.style.display =
+    "none";
+
+
+  try {
+
+    const response =
+      await fetch(
+
+        EMPLOYEE_REPORT_URL +
+        "/employee/" +
+        encodeURIComponent(
+          employeeId
+        ),
+
+        {
+
+          method: "GET",
+
+          headers: {
+
+            "Authorization":
+              "Bearer " + token,
+
+            "Content-Type":
+              "application/json"
+
+          }
+
+        }
+
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      response.status === 401 ||
+      response.status === 403
+    ) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Employee details failed"
+      );
+
+    }
+
+
+    /*
+      Backend-এর response structure
+      অনুযায়ী employee object বের করা।
+    */
+
+    const employee =
+      data.employee ||
+      data.data ||
+      data;
+
+
+    renderEmployeeDetails(
+      employee
+    );
+
+
+    loading.style.display =
+      "none";
+
+
+    content.style.display =
+      "block";
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "EMPLOYEE DETAILS ERROR:",
+      error
+    );
+
+
+    loading.innerHTML =
+
+      "❌ Employee Details লোড করা যায়নি।" +
+
+      "<br><br>" +
+
+      escapeHTML(
+        error.message
+      );
+
+  }
+
+}
+
+
+
+/* =====================================================
+   RENDER EMPLOYEE DETAILS
+===================================================== */
+
+function renderEmployeeDetails(
+  employee
+) {
+
+  const employeeId =
+    employee.employee_id ??
+    employee.id ??
+    "";
+
+
+  const name =
+    employee.employee_name ??
+    employee.name ??
+    "Unknown";
+
+
+  const mobile =
+    employee.mobile ??
+    employee.phone ??
+    "";
+
+
+  const zone =
+    employee.zone ??
+    employee.area ??
+    employee.zone_name ??
+    "";
+
+
+  const commissionPercent =
+    getNumber(
+      employee.commission_percent,
+      employee.commission_percentage,
+      employee.commission_rate
+    );
+
+
+  const totalOrders =
+    getNumber(
+      employee.total_orders,
+      employee.order_count,
+      employee.totalOrders
+    );
+
+
+  const delivered =
+    getNumber(
+      employee.delivered_orders,
+      employee.delivered,
+      employee.completed_orders
+    );
+
+
+  const cancelled =
+    getNumber(
+      employee.cancelled_orders,
+      employee.cancelled
+    );
+
+
+  const sales =
+    getNumber(
+      employee.total_sales,
+      employee.sales,
+      employee.totalSales
+    );
+
+
+  const purchaseCost =
+    getNumber(
+      employee.purchase_cost,
+      employee.total_purchase_cost,
+      employee.purchaseCost
+    );
+
+
+  const grossProfit =
+    getNumber(
+      employee.gross_profit,
+      employee.profit,
+      employee.total_profit,
+      employee.grossProfit
+    );
+
+
+  const commission =
+    getNumber(
+      employee.commission,
+      employee.total_commission
+    );
+
+
+  const companyNetProfit =
+    getNumber(
+      employee.company_net_profit,
+      employee.company_profit,
+      employee.net_profit
+    );
+
+
+  document.getElementById(
+    "detailEmployeeTitle"
+  ).textContent =
+
+    "👷 " +
+    name +
+    " — Employee Details";
+
+
+  document.getElementById(
+    "employeeBasicInfo"
+  ).innerHTML = `
+
+    <p>
+      <strong>Employee ID:</strong>
+      ${escapeHTML(employeeId)}
+    </p>
+
+    <p>
+      <strong>Name:</strong>
+      ${escapeHTML(name)}
+    </p>
+
+    <p>
+      <strong>Mobile:</strong>
+      ${escapeHTML(mobile)}
+    </p>
+
+    <p>
+      <strong>Zone:</strong>
+      ${escapeHTML(zone)}
+    </p>
+
+  `;
+
+
+  document.getElementById(
+    "detailTotalOrders"
+  ).textContent =
+    totalOrders;
+
+
+  document.getElementById(
+    "detailDelivered"
+  ).textContent =
+    delivered;
+
+
+  document.getElementById(
+    "detailCancelled"
+  ).textContent =
+    cancelled;
+
+
+  document.getElementById(
+    "detailSales"
+  ).textContent =
+    formatMoney(
+      sales
+    );
+
+
+  document.getElementById(
+    "detailPurchaseCost"
+  ).textContent =
+    formatMoney(
+      purchaseCost
+    );
+
+
+  document.getElementById(
+    "detailGrossProfit"
+  ).textContent =
+    formatMoney(
+      grossProfit
+    );
+
+
+  document.getElementById(
+    "detailCommission"
+  ).textContent =
+    formatMoney(
+      commission
+    );
+
+
+  document.getElementById(
+    "detailCompanyProfit"
+  ).textContent =
+    formatMoney(
+      companyNetProfit
+    );
+
+
+  document.getElementById(
+    "detailCommissionPercent"
+  ).textContent =
+    commissionPercent.toFixed(2) +
+    "%";
+
+}
+
+
+
+/* =====================================================
+   CLOSE EMPLOYEE DETAILS
+===================================================== */
+
+function closeEmployeeDetails() {
+
+  document.getElementById(
+    "employeeDetailModal"
+  ).style.display =
+    "none";
+
+}
+
+
+
+/* =====================================================
+   PRINT REPORT
+===================================================== */
+
+function printEmployeeReport() {
+
+  if (
+    !allEmployeeData ||
+    allEmployeeData.length === 0
+  ) {
+
+    alert(
+      "Print করার মতো কোনো Employee Report নেই।"
+    );
+
+    return;
+
+  }
+
+
+  const printWindow =
+    window.open(
+      "",
+      "_blank"
+    );
+
+
+  if (!printWindow) {
+
+    alert(
+      "Popup Blocked হয়েছে। Browser থেকে popup allow করুন।"
+    );
+
+    return;
+
+  }
+
+
+  let rows = "";
+
+
+  allEmployeeData.forEach(
+    employee => {
+
+      const employeeId =
+        employee.employee_id ??
+        employee.id ??
+        "";
+
+
+      const name =
+        employee.employee_name ??
+        employee.name ??
+        "Unknown";
+
+
+      const mobile =
+        employee.mobile ??
+        employee.phone ??
+        "";
+
+
+      const zone =
+        employee.zone ??
+        employee.area ??
+        employee.zone_name ??
+        "";
+
+
+      const commissionPercent =
+        getNumber(
+          employee.commission_percent,
+          employee.commission_percentage,
+          employee.commission_rate
+        );
+
+
+      const totalOrders =
+        getNumber(
+          employee.total_orders,
+          employee.order_count
+        );
+
+
+      const delivered =
+        getNumber(
+          employee.delivered_orders,
+          employee.delivered
+        );
+
+
+      const sales =
+        getNumber(
+          employee.total_sales,
+          employee.sales
+        );
+
+
+      const purchaseCost =
+        getNumber(
+          employee.purchase_cost,
+          employee.total_purchase_cost
+        );
+
+
+      const grossProfit =
+        getNumber(
+          employee.gross_profit,
+          employee.profit,
+          employee.total_profit
+        );
+
+
+      const commission =
+        getNumber(
+          employee.commission,
+          employee.total_commission
+        );
+
+
+      const companyNetProfit =
+        getNumber(
+          employee.company_net_profit,
+          employee.company_profit,
+          employee.net_profit
+        );
+
+
+      rows += `
+
+        <tr>
+
+          <td>${escapeHTML(employeeId)}</td>
+
+          <td>${escapeHTML(name)}</td>
+
+          <td>${escapeHTML(mobile)}</td>
+
+          <td>${escapeHTML(zone)}</td>
+
+          <td>${commissionPercent.toFixed(2)}%</td>
+
+          <td>${totalOrders}</td>
+
+          <td>${delivered}</td>
+
+          <td>${formatMoney(sales)}</td>
+
+          <td>${formatMoney(purchaseCost)}</td>
+
+          <td>${formatMoney(grossProfit)}</td>
+
+          <td>${formatMoney(commission)}</td>
+
+          <td>${formatMoney(companyNetProfit)}</td>
+
+        </tr>
+
+      `;
+
+    }
+  );
+
+
+  printWindow.document.write(`
+
+    <!DOCTYPE html>
+
+    <html lang="bn">
+
+    <head>
+
+      <meta charset="UTF-8">
+
+      <title>
+        Friends Corporation - All Employee Report
+      </title>
+
+      <style>
+
+        body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+        }
+
+        h1 {
+          text-align: center;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+        }
+
+        th,
+        td {
+          border: 1px solid #999;
+          padding: 7px;
+          font-size: 11px;
+          text-align: center;
+        }
+
+        th {
+          background: #eee;
+        }
+
+        .header-info {
+          text-align: center;
+          color: #555;
+        }
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <h1>
+        Friends Corporation
+      </h1>
+
+      <div class="header-info">
+        📊 All Employee Report
+      </div>
+
+      <div class="header-info">
+        Generated: ${new Date().toLocaleString()}
+      </div>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+
+            <th>Employee</th>
+
+            <th>Mobile</th>
+
+            <th>Zone</th>
+
+            <th>Commission %</th>
+
+            <th>Total Orders</th>
+
+            <th>Delivered</th>
+
+            <th>Sales</th>
+
+            <th>Purchase Cost</th>
+
+            <th>Gross Profit</th>
+
+            <th>Commission</th>
+
+            <th>Company Net Profit</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${rows}
+
+        </tbody>
+
+      </table>
+
+    </body>
+
+    </html>
+
+  `);
+
+
+  printWindow.document.close();
+
+
+  printWindow.focus();
+
+
+  setTimeout(
+    () => {
+
+      printWindow.print();
+
+    },
+    500
+  );
+
+}
+
+
+
+/* =====================================================
+   MONEY FORMAT
+===================================================== */
+
+function formatMoney(
+  value
+) {
+
+  return (
+
+    "৳" +
+
+    Number(
+      value || 0
+    ).toLocaleString(
+      "en-BD",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    )
+
+  );
+
+}
+
+
+
+/* =====================================================
+   NUMBER HELPER
+===================================================== */
+
+function getNumber(
+  ...values
+) {
+
+  for (
+    const value of values
+  ) {
+
+    if (
+      value !== undefined &&
+      value !== null &&
+      value !== ""
+    ) {
+
+      const number =
+        Number(value);
+
+
+      if (
+        !Number.isNaN(number)
+      ) {
+
+        return number;
+
+      }
+
+    }
+
+  }
+
+
+  return 0;
+
+}
+
+
+
+/* =========================================
+   HTML ESCAPE
+========================================= */
+
+function escapeHTML(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+
+/* =====================================================
+   CLOSE MODAL WHEN CLICK OUTSIDE
+===================================================== */
+
+window.addEventListener(
+  "click",
+  function(event) {
+
+    const reportModal =
+      document.getElementById(
+        "employeeReportModal"
+      );
+
+
+    const detailModal =
+      document.getElementById(
+        "employeeDetailModal"
+      );
+
+
+    if (
+      event.target ===
+      reportModal
+    ) {
+
+      closeEmployeeReport();
+
+    }
+
+
+    if (
+      event.target ===
+      detailModal
+    ) {
+
+      closeEmployeeDetails();
+
+    }
+
+  }
+);
+
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+function logout() {
+
+  localStorage.removeItem(
+    "admin_token"
+  );
+
+
+  localStorage.removeItem(
+    "admin_role"
+  );
+
+
+  localStorage.removeItem(
+    "admin_name"
+  );
+
+
+  window.location.href =
+    "../admin-login.html";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Friends Corporation - Main Admin Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 25px;
+      font-weight: bold;
+      color: #0b7a3b;
+      margin-bottom: 10px;
+    }
+
+    .admin-type {
+      text-align: center;
+      color: #555;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #0b7a3b;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #075b2d;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .success {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      color: #0b7a3b;
+      text-decoration: none;
+    }
+
+    .sub-login {
+      display: block;
+      text-align: center;
+      margin-top: 12px;
+      color: #555;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sub-login:hover {
+      color: #0b7a3b;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-box">
+
+    <div class="logo">
+      Friends Corporation
+    </div>
+
+    <div class="admin-type">
+      Main Admin Access Only
+    </div>
+
+    <h1>👑 Main Admin Login</h1>
+
+    <form id="loginForm">
+
+      <label for="email">
+        Main Admin Email
+      </label>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Main Admin Email লিখুন"
+        required
+      >
+
+      <label for="password">
+        Password
+      </label>
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Password লিখুন"
+        required
+      >
+
+      <button type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <div
+      id="message"
+      class="message"
+    ></div>
+
+    <a
+      href="sub-admin-login.html"
+      class="sub-login"
+    >
+      👤 Sub-Admin Login
+    </a>
+
+    <a
+      href="frontend/index.html"
+      class="back"
+    >
+      ← Shopping Page
+    </a>
+
+  </div>
+
+  <script>
+
+    const form = document.getElementById("loginForm");
+
+    const message = document.getElementById("message");
+
+
+    form.addEventListener("submit", async function(event) {
+
+      event.preventDefault();
+
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      const password =
+        document.getElementById("password").value;
+
+
+      message.style.display = "block";
+
+      message.className = "message";
+
+      message.textContent = "Login হচ্ছে...";
+
+
+      try {
+
+        const response = await fetch(
+          "http://localhost:5000/api/auth/login",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+              email: email,
+              password: password
+            })
+          }
+        );
+
+
+        const data = await response.json();
+
+
+        console.log(
+          "MAIN ADMIN LOGIN RESPONSE:",
+          data
+        );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.message || "Login failed"
+          );
+
+        }
+
+
+        if (!data.token) {
+
+          throw new Error(
+            "Login token পাওয়া যায়নি"
+          );
+
+        }
+
+
+        /*
+          খুব গুরুত্বপূর্ণ:
+          এই Login Page শুধু Main Admin-এর জন্য।
+          Sub-Admin হলে Login করতে দেওয়া হবে না।
+        */
+
+        if (
+          !data.admin ||
+          data.admin.role !== "main_admin"
+        ) {
+
+          throw new Error(
+            "এই Login Page শুধুমাত্র Main Admin-এর জন্য। Sub-Admin-এর জন্য আলাদা Login ব্যবহার করুন।"
+          );
+
+        }
+
+
+        /*
+          আগের Login Data পরিষ্কার
+        */
+
+        localStorage.removeItem("admin_token");
+        localStorage.removeItem("admin_role");
+        localStorage.removeItem("admin_name");
+
+
+        /*
+          Main Admin-এর নতুন Login Data সংরক্ষণ
+        */
+
+        localStorage.setItem(
+          "admin_token",
+          data.token
+        );
+
+        localStorage.setItem(
+          "admin_role",
+          data.admin.role
+        );
+
+        localStorage.setItem(
+          "admin_name",
+          data.admin.name
+        );
+
+
+        message.className =
+          "message success";
+
+        message.textContent =
+          "Main Admin Login সফল! Dashboard খুলছে...";
+
+
+        setTimeout(function() {
+
+          window.location.href =
+            "admin/index.html";
+
+        }, 700);
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "MAIN ADMIN LOGIN ERROR:",
+          error
+        );
+
+
+        message.className =
+          "message error";
+
+        message.textContent =
+          error.message;
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>

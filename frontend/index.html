@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Friends Corporation</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #ffffff;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+    .cart-button {
+      border: none;
+      background: #0b7a3b;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .welcome {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .welcome h1 {
+      margin: 0 0 8px;
+      font-size: 25px;
+    }
+
+    .welcome p {
+      margin: 0;
+      color: #666;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 18px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      background: #eeeeee;
+    }
+
+    .product-info {
+      padding: 15px;
+    }
+
+    .product-name {
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .category {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: 20px;
+      font-weight: bold;
+      color: #e53935;
+      margin-bottom: 5px;
+    }
+
+    .unit {
+      color: #777;
+      font-size: 13px;
+    }
+
+    .stock {
+      margin: 8px 0;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .quantity-control button {
+      width: 35px;
+      height: 35px;
+      border: none;
+      border-radius: 6px;
+      background: #eeeeee;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .quantity {
+      font-size: 17px;
+      font-weight: bold;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .add-cart {
+      width: 100%;
+      border: none;
+      background: #0b7a3b;
+      color: white;
+      padding: 11px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .add-cart:hover {
+      background: #075b2d;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      background: white;
+      border-radius: 12px;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .product-image {
+        height: 150px;
+      }
+
+      .product-info {
+        padding: 10px;
+      }
+
+      .product-name {
+        font-size: 15px;
+      }
+
+      .price {
+        font-size: 17px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="header-content">
+
+      <div class="logo">
+        Friends Corporation
+      </div>
+
+      <button class="cart-button" onclick="openCart()">
+        🛒 Cart (<span id="cartCount">0</span>)
+      </button>
+
+    </div>
+  </header>
+
+
+  <main class="container">
+
+    <div class="welcome">
+      <h1>আমাদের পণ্যসমূহ</h1>
+      <p>আপনার প্রয়োজনীয় মুদি পণ্য বেছে নিন</p>
+    </div>
+
+    <div id="products" class="products-grid">
+      <div class="empty">
+        পণ্য লোড হচ্ছে...
+      </div>
+    </div>
+
+  </main>
+
+
+  <script>
+
+    const API_URL = "http://localhost:5000/api/shop";
+
+    let cart = JSON.parse(
+      localStorage.getItem("friends_cart") || "[]"
+    );
+
+
+    async function loadProducts() {
+
+      try {
+
+        const response = await fetch(
+          `${API_URL}/products`
+        );
+
+        const products = await response.json();
+
+        const container =
+          document.getElementById("products");
+
+        if (!products.length) {
+
+          container.innerHTML = `
+            <div class="empty">
+              বর্তমানে কোনো পণ্য পাওয়া যায়নি।
+            </div>
+          `;
+
+          return;
+        }
+
+
+        container.innerHTML = products.map(product => {
+
+          const image =
+            product.image_url ||
+            "https://via.placeholder.com/400x300?text=Product";
+
+
+          return `
+
+            <div class="product-card">
+
+              <img
+                src="${image}"
+                class="product-image"
+                alt="${product.name}"
+              >
+
+              <div class="product-info">
+
+                <div class="product-name">
+                  ${product.name}
+                </div>
+
+                <div class="category">
+                  ${product.category_name || "General"}
+                </div>
+
+                <div class="price">
+                  ৳${Number(product.selling_price).toFixed(2)}
+                </div>
+
+                <div class="unit">
+                  ${product.unit || ""}
+                </div>
+
+                <div class="stock">
+                  Stock: ${product.stock}
+                </div>
+
+
+                <div class="quantity-control">
+
+                  <button
+                    onclick="changeQuantity(${product.id}, -1)"
+                  >
+                    −
+                  </button>
+
+                  <span
+                    class="quantity"
+                    id="qty-${product.id}"
+                  >
+                    1
+                  </span>
+
+                  <button
+                    onclick="changeQuantity(${product.id}, 1)"
+                  >
+                    +
+                  </button>
+
+                </div>
+
+
+                <button
+                  class="add-cart"
+                  onclick='addToCart(${JSON.stringify(product)})'
+                >
+                  🛒 Cart-এ যোগ করুন
+                </button>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }).join("");
+
+
+      } catch (error) {
+
+        document.getElementById("products").innerHTML = `
+          <div class="empty">
+            পণ্য লোড করা যাচ্ছে না।
+            <br><br>
+            Backend Server চালু আছে কিনা দেখুন।
+          </div>
+        `;
+
+      }
+
+    }
+
+
+    function changeQuantity(productId, change) {
+
+      const element =
+        document.getElementById(`qty-${productId}`);
+
+      let quantity =
+        Number(element.innerText);
+
+      quantity += change;
+
+      if (quantity < 1) {
+        quantity = 1;
+      }
+
+      element.innerText = quantity;
+
+    }
+
+
+    function addToCart(product) {
+
+      const quantityElement =
+        document.getElementById(`qty-${product.id}`);
+
+      const quantity =
+        Number(quantityElement.innerText);
+
+
+      const existing =
+        cart.find(item =>
+          item.id === product.id
+        );
+
+
+      if (existing) {
+
+        existing.quantity += quantity;
+
+      } else {
+
+        cart.push({
+          id: product.id,
+          name: product.name,
+          image_url: product.image_url,
+          selling_price: product.selling_price,
+          unit: product.unit,
+          quantity: quantity
+        });
+
+      }
+
+
+      localStorage.setItem(
+        "friends_cart",
+        JSON.stringify(cart)
+      );
+
+
+      updateCartCount();
+
+
+      alert(
+        `${product.name} Cart-এ যোগ হয়েছে`
+      );
+
+    }
+
+
+    function updateCartCount() {
+
+      const count =
+        cart.reduce(
+          (total, item) =>
+            total + item.quantity,
+          0
+        );
+
+      document.getElementById(
+        "cartCount"
+      ).innerText = count;
+
+    }
+
+
+   function openCart() {
+  window.location.href = "cart.html";
+}
+
+
+    updateCartCount();
+
+    loadProducts();
+
+  </script>
+
+</body>
+</html>

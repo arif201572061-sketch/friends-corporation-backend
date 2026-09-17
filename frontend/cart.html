@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Friends Corporation - Checkout</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+    .back-button {
+      text-decoration: none;
+      background: #0b7a3b;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #0b7a3b;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .order-name {
+      font-weight: bold;
+    }
+
+    .order-quantity {
+      color: #666;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .order-price {
+      font-weight: bold;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 12px 0;
+    }
+
+    .total {
+      border-top: 1px solid #ddd;
+      padding-top: 15px;
+      margin-top: 15px;
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .place-order {
+      width: 100%;
+      margin-top: 15px;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: #0b7a3b;
+      color: white;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .place-order:hover {
+      background: #075b2d;
+    }
+
+    .place-order:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .empty {
+      background: white;
+      padding: 40px;
+      text-align: center;
+      border-radius: 12px;
+    }
+
+    .empty a {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
+      background: #0b7a3b;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    .login-warning {
+      background: #fff3cd;
+      color: #856404;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 750px) {
+
+      .checkout-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+  </style>
+
+</head>
+
+<body>
+
+<header>
+
+  <div class="header-content">
+
+```
+<div class="logo">
+  Friends Corporation
+</div>
+
+<a
+  href="cart.html"
+  class="back-button"
+>
+  ← Cart
+</a>
+```
+
+  </div>
+
+</header>
+
+<main class="container">
+
+  <h1>
+    🛍️ Checkout
+  </h1>
+
+  <div id="emptyMessage"></div>
+
+  <div
+    class="checkout-grid"
+    id="checkoutContent"
+  >
+
+```
+<!-- Customer Information -->
+
+<div>
+
+  <div class="box">
+
+    <h2>
+      👤 Customer Information
+    </h2>
+
+
+    <div
+      id="loginWarning"
+      class="login-warning"
+      style="display:none;"
+    >
+      Customer Login করা নেই।
+      Order করার আগে Login করতে হবে।
+    </div>
+
+
+    <label for="name">
+      আপনার নাম *
+    </label>
+
+    <input
+      type="text"
+      id="name"
+      placeholder="আপনার পূর্ণ নাম"
+    >
+
+
+    <label for="phone">
+      মোবাইল নম্বর *
+    </label>
+
+    <input
+      type="tel"
+      id="phone"
+      placeholder="01XXXXXXXXX"
+    >
+
+
+    <label for="zone">
+      এলাকা / Zone *
+    </label>
+
+    <select id="zone">
+
+      <option value="">
+        এলাকা নির্বাচন করুন
+      </option>
+
+      <option value="দহিসার">
+        দহিসার
+      </option>
+
+      <option value="জয়বাংলা">
+        জয়বাংলা
+      </option>
+
+      <option value="ছোট-শ্রীবর্দী">
+        ছোট-শ্রীবর্দী
+      </option>
+
+      <option value="কুমারদিয়া">
+        কুমারদিয়া
+      </option>
+
+      <option value="দামদরদী">
+        দামদরদী
+      </option>
+
+      <option value="ধর্মদী">
+        ধর্মদী
+      </option>
+
+      <option value="আশফরদী">
+        আশফরদী
+      </option>
+
+      <option value="নারায়নপুর">
+        নারায়নপুর
+      </option>
+
+      <option value="গজারিয়া">
+        গজারিয়া
+      </option>
+
+    </select>
+
+
+    <label for="address">
+      Delivery Address *
+    </label>
+
+    <textarea
+      id="address"
+      placeholder="আপনার সম্পূর্ণ Delivery Address"
+    ></textarea>
+
+
+    <label for="note">
+      অতিরিক্ত নির্দেশনা
+    </label>
+
+    <textarea
+      id="note"
+      placeholder="যেমন: বিকাল ৫টার পরে Delivery চাই"
+    ></textarea>
+
+  </div>
+
+</div>
+
+
+<!-- Order Summary -->
+
+<div>
+
+  <div class="box">
+
+    <h2>
+      🛒 আপনার Order
+    </h2>
+
+
+    <div id="orderItems"></div>
+
+
+    <div class="summary-row">
+
+      <span>
+        Subtotal
+      </span>
+
+      <span id="subtotal">
+        ৳0.00
+      </span>
+
+    </div>
+
+
+    <div class="summary-row">
+
+      <span>
+        Delivery Charge
+      </span>
+
+      <span id="delivery">
+        ৳0.00
+      </span>
+
+    </div>
+
+
+    <div class="summary-row total">
+
+      <span>
+        Total
+      </span>
+
+      <span id="total">
+        ৳0.00
+      </span>
+
+    </div>
+
+
+    <button
+      class="place-order"
+      id="placeOrderButton"
+      onclick="placeOrder()"
+    >
+      ✅ Order Place করুন
+    </button>
+
+  </div>
+
+</div>
+```
+
+  </div>
+
+</main>
+
+<script>
+
+
+  /*
+    ====================================
+    Cart Load
+    ====================================
+  */
+
+  let cart = JSON.parse(
+    localStorage.getItem("friends_cart") || "[]"
+  );
+
+
+  /*
+    ====================================
+    Customer Information Load
+    ====================================
+  */
+
+  function loadCustomerInfo() {
+
+    const customerData =
+      localStorage.getItem("customer");
+
+
+    const token =
+      localStorage.getItem("customer_token");
+
+
+    /*
+      Login না থাকলে Warning
+    */
+
+    if (!token || !customerData) {
+
+      document.getElementById(
+        "loginWarning"
+      ).style.display = "block";
+
+      return;
+
+    }
+
+
+    try {
+
+      const customer =
+        JSON.parse(customerData);
+
+
+      /*
+        Name
+      */
+
+      if (customer.name) {
+
+        document.getElementById(
+          "name"
+        ).value =
+          customer.name;
+
+      }
+
+
+      /*
+        Phone
+      */
+
+      if (customer.phone) {
+
+        document.getElementById(
+          "phone"
+        ).value =
+          customer.phone;
+
+      }
+
+
+      /*
+        Zone
+      */
+
+      if (customer.zone) {
+
+        document.getElementById(
+          "zone"
+        ).value =
+          customer.zone;
+
+      }
+
+
+      /*
+        Address
+      */
+
+      if (customer.address) {
+
+        document.getElementById(
+          "address"
+        ).value =
+          customer.address;
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Customer information load failed:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /*
+    ====================================
+    Order Items Load
+    ====================================
+  */
+
+  function loadOrder() {
+
+    const orderItems =
+      document.getElementById(
+        "orderItems"
+      );
+
+
+    const checkoutContent =
+      document.getElementById(
+        "checkoutContent"
+      );
+
+
+    const emptyMessage =
+      document.getElementById(
+        "emptyMessage"
+      );
+
+
+    /*
+      Cart Empty
+    */
+
+    if (cart.length === 0) {
+
+      checkoutContent.style.display =
+        "none";
+
+
+      emptyMessage.innerHTML = `
+
+        <div class="empty">
+
+          <h2>
+            আপনার Cart খালি
+          </h2>
+
+          <p>
+            Order করার আগে Product Cart-এ যোগ করুন।
+          </p>
+
+          <a href="index.html">
+            Shopping Page-এ যান
+          </a>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    let subtotal = 0;
+
+
+    orderItems.innerHTML = "";
+
+
+    cart.forEach(item => {
+
+      const price =
+        Number(item.selling_price) || 0;
+
+
+      const quantity =
+        Number(item.quantity) || 0;
+
+
+      const itemTotal =
+        price * quantity;
+
+
+      subtotal += itemTotal;
+
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "order-item";
+
+
+      div.innerHTML = `
+
+        <div>
+
+          <div class="order-name">
+            ${item.name}
+          </div>
+
+          <div class="order-quantity">
+            Quantity: ${quantity}
+          </div>
+
+        </div>
+
+        <div class="order-price">
+          ৳${itemTotal.toFixed(2)}
+        </div>
+
+      `;
+
+
+      orderItems.appendChild(div);
+
+    });
+
+
+    /*
+      আপাতত Delivery Charge = 0
+    */
+
+    const delivery = 0;
+
+
+    const total =
+      subtotal + delivery;
+
+
+    document.getElementById(
+      "subtotal"
+    ).innerText =
+      "৳" + subtotal.toFixed(2);
+
+
+    document.getElementById(
+      "delivery"
+    ).innerText =
+      "৳" + delivery.toFixed(2);
+
+
+    document.getElementById(
+      "total"
+    ).innerText =
+      "৳" + total.toFixed(2);
+
+  }
+
+
+  /*
+    ====================================
+    Place Order
+    ====================================
+  */
+
+  async function placeOrder() {
+
+
+    const name =
+      document.getElementById(
+        "name"
+      ).value.trim();
+
+
+    const phone =
+      document.getElementById(
+        "phone"
+      ).value.trim();
+
+
+    const zone =
+      document.getElementById(
+        "zone"
+      ).value;
+
+
+    const address =
+      document.getElementById(
+        "address"
+      ).value.trim();
+
+
+    const note =
+      document.getElementById(
+        "note"
+      ).value.trim();
+
+
+    /*
+      Login Token
+    */
+
+    const token =
+      localStorage.getItem(
+        "customer_token"
+      );
+
+
+    /*
+      Login Check
+    */
+
+    if (!token) {
+
+      alert(
+        "Order করার আগে Customer Login করতে হবে।"
+      );
+
+      window.location.href =
+        "customer-login.html";
+
+      return;
+
+    }
+
+
+    /*
+      Name Check
+    */
+
+    if (!name) {
+
+      alert(
+        "আপনার নাম লিখুন।"
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Phone Check
+    */
+
+    if (!phone) {
+
+      alert(
+        "মোবাইল নম্বর লিখুন।"
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Zone Check
+    */
+
+    if (!zone) {
+
+      alert(
+        "আপনার এলাকা নির্বাচন করুন।"
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Address Check
+    */
+
+    if (!address) {
+
+      alert(
+        "Delivery Address লিখুন।"
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Cart Check
+    */
+
+    if (!cart.length) {
+
+      alert(
+        "আপনার Cart খালি।"
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Order Items
+    */
+
+    const orderItems =
+      cart.map(item => ({
+
+        product_id:
+          Number(item.id),
+
+        quantity:
+          Number(item.quantity)
+
+      }));
+
+
+    /*
+      Button Disable
+    */
+
+    const button =
+      document.getElementById(
+        "placeOrderButton"
+      );
+
+
+    button.disabled = true;
+
+    button.innerText =
+      "Order তৈরি হচ্ছে...";
+
+
+    try {
+
+
+      /*
+        Backend Order API
+      */
+
+      const response =
+        await fetch(
+          "http://localhost:5000/api/customer-orders",
+          {
+
+            method: "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json",
+
+              "Authorization":
+                `Bearer ${token}`
+
+            },
+
+            body: JSON.stringify({
+
+              items:
+                orderItems,
+
+              delivery_charge:
+                0,
+
+              payment_method:
+                "cash_on_delivery",
+
+              delivery_address:
+                `${zone}, ${address}`,
+
+              customer_phone:
+                phone
+
+            })
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      /*
+        Backend Error
+      */
+
+      if (!response.ok) {
+
+        alert(
+          data.message ||
+          "Order তৈরি করা যায়নি।"
+        );
+
+
+        button.disabled = false;
+
+        button.innerText =
+          "✅ Order Place করুন";
+
+        return;
+
+      }
+
+
+      /*
+        Order Success
+      */
+
+      alert(
+
+        "🎉 Order সফলভাবে তৈরি হয়েছে!\n\n" +
+
+        "Order ID: " +
+        data.order_id +
+
+        "\n\n" +
+
+        "Total: ৳" +
+        data.total_amount
+
+      );
+
+
+      /*
+        Cart Clear
+      */
+
+      localStorage.removeItem(
+        "friends_cart"
+      );
+
+
+      /*
+        Shopping Page
+      */
+
+      window.location.href =
+        "index.html";
+
+
+    } catch (error) {
+
+      console.error(error);
+
+
+      alert(
+        "Server-এর সাথে যোগাযোগ করা যাচ্ছে না।"
+      );
+
+
+      button.disabled = false;
+
+      button.innerText =
+        "✅ Order Place করুন";
+
+    }
+
+  }
+
+
+  /*
+    ====================================
+    Page Load
+    ====================================
+  */
+
+  loadCustomerInfo();
+
+  loadOrder();
+
+
+</script>
+
+</body>
+</html>

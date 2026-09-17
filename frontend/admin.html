@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friends Corporation - Admin Panel</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #0b7a3b;
+      color: white;
+      padding: 18px 20px;
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .logout-button {
+      border: none;
+      background: white;
+      color: #0b7a3b;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .welcome {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .menu-card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #222;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      text-align: center;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .menu-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .menu-title {
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .orders-section {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .section-title {
+      font-size: 21px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .order-card {
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .order-id {
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .status {
+      background: #fff3cd;
+      color: #856404;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .order-info {
+      margin-top: 12px;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 700px) {
+      .menu {
+        grid-template-columns: 1fr;
+      }
+
+      .header-content {
+        flex-direction: column;
+      }
+
+      .order-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+<header>
+  <div class="header-content">
+    <div class="logo">
+      Friends Corporation — Admin Panel
+    </div>
+
+```
+<button class="logout-button" onclick="logout()">
+  Logout
+</button>
+```
+
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="welcome">
+    <h2>👑 Admin Dashboard</h2>
+    <p id="adminInfo">Admin তথ্য লোড হচ্ছে...</p>
+  </div>
+
+  <div class="menu">
+
+```
+<a href="admin.html" class="menu-card">
+  <div class="menu-icon">📦</div>
+  <div class="menu-title">Orders</div>
+</a>
+
+<a href="index.html" class="menu-card">
+  <div class="menu-icon">🛒</div>
+  <div class="menu-title">Shopping Page</div>
+</a>
+
+<a href="my-orders.html" class="menu-card">
+  <div class="menu-icon">👤</div>
+  <div class="menu-title">Customer Orders</div>
+</a>
+```
+
+  </div>
+
+  <div class="orders-section">
+
+```
+<div class="section-title">
+  📦 সব Orders
+</div>
+
+<div id="ordersContainer">
+  <div class="loading">
+    Orders লোড হচ্ছে...
+  </div>
+</div>
+```
+
+  </div>
+
+</main>
+
+<script>
+
+const API_URL =
+  "http://localhost:5000/api/admin-orders";
+
+const token =
+  localStorage.getItem("admin_token");
+
+
+// ===============================
+// Login Check
+// ===============================
+
+if (!token) {
+
+  document.getElementById("adminInfo").innerHTML =
+    "⚠️ Admin Login করা নেই।";
+
+  document.getElementById("ordersContainer").innerHTML = `
+    <div class="error">
+      Admin Login প্রয়োজন।
+      <br><br>
+      <a href="admin-login.html">
+        Admin Login করুন
+      </a>
+    </div>
+  `;
+
+} else {
+
+  loadAdmin();
+  loadOrders();
+
+}
+
+
+// ===============================
+// Admin Information
+// ===============================
+
+async function loadAdmin() {
+
+  try {
+
+    const response =
+      await fetch(
+        "http://localhost:5000/api/auth/me",
+        {
+          headers: {
+            "Authorization":
+              "Bearer " + token
+          }
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Admin information failed"
+      );
+
+    }
+
+    if (data.admin) {
+
+      document.getElementById(
+        "adminInfo"
+      ).innerHTML =
+        "স্বাগতম, <strong>" +
+        escapeHTML(data.admin.name) +
+        "</strong> — Role: <strong>" +
+        escapeHTML(data.admin.role) +
+        "</strong>";
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+}
+
+
+// ===============================
+// Load Orders
+// ===============================
+
+async function loadOrders() {
+
+  const container =
+    document.getElementById(
+      "ordersContainer"
+    );
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          method: "GET",
+
+          headers: {
+            "Authorization":
+              "Bearer " + token,
+
+            "Content-Type":
+              "application/json"
+          }
+        }
+      );
+
+    const data =
+      await response.json();
+
+    console.log(
+      "ADMIN ORDERS:",
+      data
+    );
+
+
+    if (
+      response.status === 401 ||
+      response.status === 403
+    ) {
+
+      localStorage.removeItem(
+        "admin_token"
+      );
+
+      throw new Error(
+        "Admin Login Session শেষ হয়েছে"
+      );
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Orders load failed"
+      );
+
+    }
+
+
+    let orders = data;
+
+    if (
+      data &&
+      Array.isArray(data.orders)
+    ) {
+      orders = data.orders;
+    }
+
+    if (
+      data &&
+      Array.isArray(data.data)
+    ) {
+      orders = data.data;
+    }
+
+
+    displayOrders(orders);
+
+  } catch (error) {
+
+    console.error(
+      "ADMIN ORDER ERROR:",
+      error
+    );
+
+    container.innerHTML = `
+      <div class="error">
+        ⚠️ ${escapeHTML(error.message)}
+        <br><br>
+        Backend Server চালু আছে কিনা দেখুন।
+      </div>
+    `;
+
+  }
+
+}
+
+
+// ===============================
+// Display Orders
+// ===============================
+
+function displayOrders(orders) {
+
+  const container =
+    document.getElementById(
+      "ordersContainer"
+    );
+
+
+  if (
+    !Array.isArray(orders) ||
+    orders.length === 0
+  ) {
+
+    container.innerHTML = `
+      <div class="loading">
+        এখনো কোনো Order নেই।
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    orders.map(order => {
+
+      const orderId =
+        order.id ??
+        order.order_id ??
+        order.orderId;
+
+
+      const total =
+        Number(order.total_amount) || 0;
+
+      const delivery =
+        Number(order.delivery_charge) || 0;
+
+      const grandTotal =
+        total + delivery;
+
+
+      return `
+        <div class="order-card">
+
+          <div class="order-top">
+
+            <div class="order-id">
+              📦 Order #${escapeHTML(
+                String(orderId ?? "-")
+              )}
+            </div>
+
+            <div class="status">
+              ${escapeHTML(
+                formatStatus(
+                  order.order_status
+                )
+              )}
+            </div>
+
+          </div>
+
+          <div class="order-info">
+
+            👤 Customer:
+            ${escapeHTML(
+              order.customer_name || "-"
+            )}
+
+            <br>
+
+            📞 Phone:
+            ${escapeHTML(
+              order.customer_phone ||
+              "-"
+            )}
+
+            <br>
+
+            📍 Address:
+            ${escapeHTML(
+              order.delivery_address ||
+              "-"
+            )}
+
+            <br>
+
+            💰 Total:
+            ৳${grandTotal.toFixed(2)}
+
+            <br>
+
+            👷 Employee:
+            ${escapeHTML(
+              order.employee_name ||
+              "এখনো Assign করা হয়নি"
+            )}
+
+            <br>
+
+            📅 Date:
+            ${escapeHTML(
+              formatDate(
+                order.created_at
+              )
+            )}
+
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+// ===============================
+// Status
+// ===============================
+
+function formatStatus(status) {
+
+  const map = {
+
+    pending:
+      "অপেক্ষমান",
+
+    confirmed:
+      "নিশ্চিত হয়েছে",
+
+    processing:
+      "প্রস্তুত হচ্ছে",
+
+    out_for_delivery:
+      "Delivery-এর পথে",
+
+    delivered:
+      "Delivered",
+
+    cancelled:
+      "Cancelled"
+
+  };
+
+  return (
+    map[status] ||
+    status ||
+    "Unknown"
+  );
+
+}
+
+
+// ===============================
+// Date
+// ===============================
+
+function formatDate(value) {
+
+  if (!value) {
+    return "-";
+  }
+
+  const date =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+    return value;
+  }
+
+  return date.toLocaleString(
+    "bn-BD",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit"
+    }
+  );
+
+}
+
+
+// ===============================
+// Security
+// ===============================
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+// ===============================
+// Logout
+// ===============================
+
+function logout() {
+
+  localStorage.removeItem(
+    "admin_token"
+  );
+
+  window.location.href =
+    "admin-login.html";
+
+}
+
+</script>
+
+</body>
+</html>

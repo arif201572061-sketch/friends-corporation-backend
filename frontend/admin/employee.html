@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Friends Corporation — Employee Management</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #0b5ed7;
+      color: white;
+      padding: 18px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    header h2 {
+      margin: 0;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .top-btn {
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .dashboard-btn {
+      background: white;
+      color: #0b5ed7;
+    }
+
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .container {
+      max-width: 1500px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .notice {
+      background: #e7f1ff;
+      border-left: 5px solid #0b5ed7;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    /* ADD EMPLOYEE BUTTON */
+
+    .add-section {
+      background: white;
+      padding: 18px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .add-btn {
+      width: 100%;
+      border: none;
+      background: #198754;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .add-btn:hover {
+      background: #157347;
+    }
+
+    /* FORM */
+
+    #employeeFormSection {
+      display: none;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 25px;
+    }
+
+    #employeeFormSection h2 {
+      margin-top: 0;
+      color: #0b5ed7;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #0b5ed7;
+    }
+
+    .help-text {
+      font-size: 13px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .upload-note {
+      background: #fff8e1;
+      border-left: 4px solid #ffc107;
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .preview-area {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .preview-box {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      background: #fafafa;
+    }
+
+    .profile-preview {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .signature-preview {
+      width: 60px;
+      height: 120px;
+      object-fit: contain;
+      display: none;
+    }
+
+    .nid-preview {
+      max-width: 250px;
+      max-height: 150px;
+      object-fit: contain;
+      display: none;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .save-btn {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .cancel-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* TABLE */
+
+    .table-section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1250px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #0b5ed7;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    .employee-photo {
+      width: 55px;
+      height: 55px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+
+    .user-id {
+      font-weight: bold;
+      color: #0b5ed7;
+    }
+
+    .status-active {
+      color: #198754;
+      font-weight: bold;
+    }
+
+    .status-inactive {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      border: none;
+      padding: 7px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+    }
+
+    .details-btn {
+      background: #6f42c1;
+    }
+
+    .edit-btn {
+      background: #0d6efd;
+    }
+
+    .delete-btn {
+      background: #dc3545;
+    }
+
+    .orders-btn {
+      background: #fd7e14;
+    }
+
+    .status-btn {
+      background: #198754;
+    }
+
+    /* MODAL */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 9999;
+      overflow-y: auto;
+      padding: 30px 15px;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 900px;
+      margin: auto;
+      border-radius: 12px;
+      padding: 25px;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      border: none;
+      background: #dc3545;
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .detail-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .detail-profile {
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid #0b5ed7;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .detail-item {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 6px;
+      border-left: 4px solid #0b5ed7;
+    }
+
+    .detail-item strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    .document-section {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+    }
+
+    .document-grid {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .document-box {
+      text-align: center;
+    }
+
+    .document-box h4 {
+      margin-bottom: 8px;
+    }
+
+    .detail-nid {
+      max-width: 450px;
+      max-height: 300px;
+      object-fit: contain;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .detail-signature {
+      width: 80px;
+      height: 300px;
+      object-fit: contain;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .loading {
+      padding: 25px;
+      text-align: center;
+      color: #666;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    @media (max-width: 800px) {
+      .form-grid,
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        align-items: flex-start;
+      }
+
+      .modal-content {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h2>Friends Corporation — Employee Management</h2>
+
+  <div class="header-buttons">
+    <button class="top-btn dashboard-btn" onclick="goDashboard()">
+      ← Dashboard
+    </button>
+
+    <button class="top-btn logout-btn" onclick="logout()">
+      Logout
+    </button>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="notice" id="roleNotice">
+    Employee Management
+  </div>
+
+  <!-- ADD EMPLOYEE -->
+
+  <div class="add-section">
+    <button class="add-btn" onclick="toggleEmployeeForm()">
+      ➕ নতুন Employee যোগ করুন
+    </button>
+  </div>
+
+  <!-- FORM -->
+
+  <div id="employeeFormSection">
+
+    <h2 id="formTitle">👷 নতুন Employee যোগ করুন</h2>
+
+    <form id="employeeForm">
+
+      <input type="hidden" id="employeeId">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>👤 Employee Name *</label>
+          <input
+            type="text"
+            id="name"
+            required
+            placeholder="Employee-এর নাম">
+        </div>
+
+        <div class="form-group">
+          <label>📞 Phone *</label>
+          <input
+            type="text"
+            id="phone"
+            required
+            placeholder="01XXXXXXXXX">
+        </div>
+
+        <div class="form-group">
+          <label>🔐 Password *</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="নতুন Employee-এর Password">
+          <div class="help-text">
+            নতুন Employee-এর জন্য Password দিন। Edit করার সময় খালি রাখলে পুরনো Password থাকবে।
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>📧 Email</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="example@email.com">
+        </div>
+
+        <div class="form-group full">
+          <label>🏠 Address</label>
+          <input
+            type="text"
+            id="address"
+            placeholder="Employee-এর ঠিকানা">
+        </div>
+
+        <div class="form-group">
+          <label>📍 Zone</label>
+          <select id="zone">
+            <option value="">Zone নির্বাচন করুন</option>
+            <option value="দহিসার">দহিসার</option>
+            <option value="জয়বাংলা">জয়বাংলা</option>
+            <option value="ছোট-শ্রীবর্দী">ছোট-শ্রীবর্দী</option>
+            <option value="কুমারদিয়া">কুমারদিয়া</option>
+            <option value="দামদরদী">দামদরদী</option>
+            <option value="ধর্মদী">ধর্মদী</option>
+            <option value="আশফরদী">আশফরদী</option>
+            <option value="নারায়নপুর">নারায়নপুর</option>
+            <option value="গজারিয়া সার্কেল">গজারিয়া সার্কেল</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>💰 Commission (%)</label>
+          <input
+            type="number"
+            id="commission_percent"
+            min="0"
+            max="100"
+            step="0.01"
+            value="0">
+        </div>
+
+        <div class="form-group">
+          <label>💵 Salary</label>
+          <input
+            type="number"
+            id="salary"
+            min="0"
+            step="0.01"
+            value="0">
+        </div>
+
+        <div class="form-group">
+          <label>💳 Payment Type</label>
+          <select id="payment_type">
+            <option value="commission">Commission</option>
+            <option value="salary">Salary</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>🔘 Status</label>
+          <select id="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>📷 Employee Photo *</label>
+          <input
+            type="file"
+            id="profile_photo"
+            accept="image/jpeg,image/jpg,image/png,image/webp">
+
+          <div class="help-text">
+            আপলোডের আগে ছবিটি 300 × 300 px করা হবে।
+          </div>
+
+          <div class="preview-box">
+            <img id="profilePreview" class="profile-preview">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>🪪 NID Card Photo *</label>
+          <input
+            type="file"
+            id="nid_photo"
+            accept="image/jpeg,image/jpg,image/png,image/webp">
+
+          <div class="help-text">
+            NID ছবির original size/aspect ratio রাখা হবে।
+          </div>
+
+          <div class="preview-box">
+            <img id="nidPreview" class="nid-preview">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>✍️ Signature Photo *</label>
+          <input
+            type="file"
+            id="signature_photo"
+            accept="image/jpeg,image/jpg,image/png,image/webp">
+
+          <div class="help-text">
+            আপলোডের আগে ছবিটি 80 × 300 px করা হবে।
+          </div>
+
+          <div class="preview-box">
+            <img id="signaturePreview" class="signature-preview">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="upload-note">
+        ⚠️ নতুন Employee তৈরির সময় Employee Photo, NID Photo এবং Signature অবশ্যই দিতে হবে।
+        পরীক্ষার সময় প্রকৃত NID/Signature ব্যবহার না করে Test Image ব্যবহার করো।
+      </div>
+
+      <div class="form-actions">
+
+        <button
+          type="submit"
+          class="save-btn"
+          id="saveButton">
+          ✅ Employee যোগ করুন
+        </button>
+
+        <button
+          type="button"
+          class="cancel-btn"
+          onclick="cancelForm()">
+          ✖ Cancel
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+  <!-- EMPLOYEE LIST -->
+
+  <div class="table-section">
+
+    <h2>👷 Employee List</h2>
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User ID</th>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Zone</th>
+            <th>Commission</th>
+            <th>Salary</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="employeeTableBody">
+          <tr>
+            <td colspan="12" class="loading">
+              Employee data loading...
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- DETAILS MODAL -->
+
+<div class="modal" id="detailsModal">
+
+  <div class="modal-content">
+
+    <button
+      class="close-btn"
+      onclick="closeDetails()">
+      ×
+    </button>
+
+    <div id="detailsContent">
+      Loading...
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const API_URL = "http://localhost:5000/api/employees";
+const AUTH_URL = "http://localhost:5000/api/auth/me";
+
+const token = localStorage.getItem("admin_token");
+
+let currentRole = "";
+let employees = [];
+let editingEmployeeId = null;
+
+
+/* =========================
+   AUTH
+========================= */
+
+async function checkAuth() {
+
+  if (!token) {
+    window.location.href = "../admin-login.html";
+    return;
+  }
+
+  try {
+
+    const response = await fetch(AUTH_URL, {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    });
+
+    if (!response.ok) {
+      localStorage.clear();
+      window.location.href = "../admin-login.html";
+      return;
+    }
+
+    const data = await response.json();
+
+    currentRole = data.admin.role;
+
+    updateRoleNotice();
+
+    loadEmployees();
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Server-এর সাথে যোগাযোগ করা যাচ্ছে না।");
+
+  }
+
+}
+
+
+/* =========================
+   ROLE NOTICE
+========================= */
+
+function updateRoleNotice() {
+
+  const notice = document.getElementById("roleNotice");
+
+  if (currentRole === "main_admin") {
+
+    notice.innerHTML =
+      "👑 <strong>Main Admin:</strong> আপনি Employee যোগ, Edit, Delete এবং বিস্তারিত তথ্য দেখতে পারবেন।";
+
+  } else {
+
+    notice.innerHTML =
+      "🛡️ <strong>Sub-Admin:</strong> আপনি Employee-এর তালিকা ও প্রয়োজনীয় তথ্য দেখতে পারবেন। Delete করার অনুমতি নেই।";
+
+  }
+
+}
+
+
+/* =========================
+   LOAD EMPLOYEES
+========================= */
+
+async function loadEmployees() {
+
+  const tbody = document.getElementById("employeeTableBody");
+
+  tbody.innerHTML = `
+    <tr>
+      <td colspan="12" class="loading">
+        Employee data loading...
+      </td>
+    </tr>
+  `;
+
+  try {
+
+    const response = await fetch(API_URL, {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    });
+
+    if (response.status === 401 || response.status === 403) {
+
+      alert("আপনার এই তথ্য দেখার অনুমতি নেই।");
+
+      localStorage.removeItem("admin_token");
+
+      window.location.href = "../admin-login.html";
+
+      return;
+    }
+
+    const data = await response.json();
+
+    if (!response.ok) {
+
+      throw new Error(data.message || "Employee load failed");
+
+    }
+
+    employees = Array.isArray(data)
+      ? data
+      : (data.employees || []);
+
+    renderEmployees();
+
+  } catch (error) {
+
+    console.error(error);
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="12" class="empty">
+          ❌ Employee data load করা যায়নি।
+          <br><br>
+          ${escapeHTML(error.message)}
+        </td>
+      </tr>
+    `;
+
+  }
+
+}
+
+
+/* =========================
+   RENDER EMPLOYEES
+========================= */
+
+function renderEmployees() {
+
+  const tbody = document.getElementById("employeeTableBody");
+
+  if (!employees.length) {
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="12" class="empty">
+          এখনো কোনো Employee নেই।
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML = employees.map(employee => {
+
+    const photo = employee.profile_photo
+      ? getUploadUrl(employee.profile_photo)
+      : "";
+
+    const photoHTML = photo
+      ? `<img
+           src="${escapeAttribute(photo)}"
+           class="employee-photo"
+           alt="Employee Photo"
+         >`
+      : "—";
+
+    const statusHTML =
+      employee.status === "active"
+        ? `<span class="status-active">● Active</span>`
+        : `<span class="status-inactive">● Inactive</span>`;
+
+    let actionHTML = `
+      <div class="action-buttons">
+
+        <button
+          class="action-btn details-btn"
+          onclick="showDetails(${employee.id})">
+          👁️ বিস্তারিত
+        </button>
+
+        <button
+          class="action-btn edit-btn"
+          onclick="editEmployee(${employee.id})">
+          ✏️ Edit
+        </button>
+
+        <button
+          class="action-btn orders-btn"
+          onclick="viewEmployeeOrders(${employee.id})">
+          📦 Orders
+        </button>
+    `;
+
+    if (currentRole === "main_admin") {
+
+      actionHTML += `
+        <button
+          class="action-btn delete-btn"
+          onclick="deleteEmployee(${employee.id})">
+          🗑️ Delete
+        </button>
+      `;
+
+    }
+
+    actionHTML += `
+        <button
+          class="action-btn status-btn"
+          onclick="toggleStatus(${employee.id})">
+          🔘 Status
+        </button>
+
+      </div>
+    `;
+
+    return `
+      <tr>
+
+        <td>#${employee.id}</td>
+
+        <td class="user-id">
+          ${escapeHTML(employee.user_id || "—")}
+        </td>
+
+        <td>
+          ${photoHTML}
+        </td>
+
+        <td>
+          <strong>
+            ${escapeHTML(employee.name || "—")}
+          </strong>
+        </td>
+
+        <td>
+          ${currentRole === "main_admin"
+            ? escapeHTML(employee.phone || "—")
+            : "🔒 Hidden"}
+        </td>
+
+        <td>
+          ${escapeHTML(employee.address || "—")}
+        </td>
+
+        <td>
+          ${escapeHTML(employee.zone || "—")}
+        </td>
+
+        <td>
+          ${Number(employee.commission_percent || 0).toFixed(2)}%
+        </td>
+
+        <td>
+          ৳${Number(employee.salary || 0).toFixed(2)}
+        </td>
+
+        <td>
+          ${escapeHTML(employee.payment_type || "—")}
+        </td>
+
+        <td>
+          ${statusHTML}
+        </td>
+
+        <td>
+          ${actionHTML}
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+
+}
+
+
+/* =========================
+   ADD FORM TOGGLE
+========================= */
+
+function toggleEmployeeForm() {
+
+  const section =
+    document.getElementById("employeeFormSection");
+
+  if (section.style.display === "none" ||
+      section.style.display === "") {
+
+    section.style.display = "block";
+
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  } else {
+
+    section.style.display = "none";
+
+  }
+
+}
+
+
+/* =========================
+   FORM SUBMIT
+========================= */
+
+document
+  .getElementById("employeeForm")
+  .addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const name =
+      document.getElementById("name").value.trim();
+
+    const phone =
+      document.getElementById("phone").value.trim();
+
+    const password =
+      document.getElementById("password").value;
+
+    const email =
+      document.getElementById("email").value.trim();
+
+    const address =
+      document.getElementById("address").value.trim();
+
+    const zone =
+      document.getElementById("zone").value;
+
+    const commission =
+      document.getElementById("commission_percent").value;
+
+    const salary =
+      document.getElementById("salary").value;
+
+    const paymentType =
+      document.getElementById("payment_type").value;
+
+    const status =
+      document.getElementById("status").value;
+
+    const profileFile =
+      document.getElementById("profile_photo").files[0];
+
+    const nidFile =
+      document.getElementById("nid_photo").files[0];
+
+    const signatureFile =
+      document.getElementById("signature_photo").files[0];
+
+
+    /* PHONE VALIDATION */
+
+    if (!/^01\d{9}$/.test(phone)) {
+
+      alert(
+        "সঠিক ১১ সংখ্যার বাংলাদেশি Mobile Number দিন।\nউদাহরণ: 017XXXXXXXX"
+      );
+
+      return;
+    }
+
+
+    /* NEW EMPLOYEE REQUIRED FILES */
+
+    if (!editingEmployeeId) {
+
+      if (!profileFile) {
+
+        alert("Employee Photo দিন।");
+
+        return;
+      }
+
+      if (!nidFile) {
+
+        alert("NID Photo দিন।");
+
+        return;
+      }
+
+      if (!signatureFile) {
+
+        alert("Signature Photo দিন।");
+
+        return;
+      }
+
+      if (!password || password.length < 6) {
+
+        alert(
+          "নতুন Employee-এর Password কমপক্ষে 6 characters হতে হবে।"
+        );
+
+        return;
+      }
+
+    }
+
+
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("phone", phone);
+    formData.append("email", email);
+    formData.append("address", address);
+    formData.append("zone", zone);
+    formData.append(
+      "commission_percent",
+      commission || "0"
+    );
+    formData.append(
+      "salary",
+      salary || "0"
+    );
+    formData.append(
+      "payment_type",
+      paymentType
+    );
+    formData.append(
+      "status",
+      status
+    );
+
+
+    if (password) {
+      formData.append("password", password);
+    }
+
+
+    /* PROFILE 300x300 */
+
+    if (profileFile) {
+
+      const resizedProfile =
+        await resizeImage(
+          profileFile,
+          300,
+          300
+        );
+
+      formData.append(
+        "profile_photo",
+        resizedProfile,
+        "employee_profile_300x300.jpg"
+      );
+
+    }
+
+
+    /* NID ORIGINAL */
+
+    if (nidFile) {
+
+      formData.append(
+        "nid_photo",
+        nidFile
+      );
+
+    }
+
+
+    /* SIGNATURE 80x300 */
+
+    if (signatureFile) {
+
+      const resizedSignature =
+        await resizeImage(
+          signatureFile,
+          80,
+          300
+        );
+
+      formData.append(
+        "signature_photo",
+        resizedSignature,
+        "employee_signature_80x300.jpg"
+      );
+
+    }
+
+
+    const saveButton =
+      document.getElementById("saveButton");
+
+    saveButton.disabled = true;
+
+    saveButton.textContent =
+      "⏳ Saving...";
+
+
+    try {
+
+      let response;
+
+      if (editingEmployeeId) {
+
+        response = await fetch(
+          `${API_URL}/${editingEmployeeId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: "Bearer " + token
+            },
+            body: formData
+          }
+        );
+
+      } else {
+
+        response = await fetch(
+          API_URL,
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + token
+            },
+            body: formData
+          }
+        );
+
+      }
+
+
+      const data = await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message || "Employee save failed"
+        );
+
+      }
+
+
+      if (editingEmployeeId) {
+
+        alert("✅ Employee সফলভাবে Update হয়েছে।");
+
+      } else {
+
+        alert(
+          "✅ Employee সফলভাবে তৈরি হয়েছে!\n\n" +
+          "User ID: " +
+          (data.user_id || "তৈরি হয়েছে")
+        );
+
+      }
+
+
+      resetForm();
+
+      await loadEmployees();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "❌ সমস্যা হয়েছে:\n" +
+        error.message
+      );
+
+    } finally {
+
+      saveButton.disabled = false;
+
+      saveButton.textContent =
+        editingEmployeeId
+          ? "💾 Employee Update করুন"
+          : "✅ Employee যোগ করুন";
+
+    }
+
+  });
+
+
+/* =========================
+   IMAGE RESIZE
+========================= */
+
+function resizeImage(file, width, height) {
+
+  return new Promise((resolve, reject) => {
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+      const image = new Image();
+
+      image.onload = function() {
+
+        const canvas =
+          document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx =
+          canvas.getContext("2d");
+
+        ctx.drawImage(
+          image,
+          0,
+          0,
+          width,
+          height
+        );
+
+        canvas.toBlob(
+          function(blob) {
+
+            if (!blob) {
+
+              reject(
+                new Error(
+                  "Image resize failed"
+                )
+              );
+
+              return;
+            }
+
+            resolve(
+              new File(
+                [blob],
+                file.name,
+                {
+                  type: "image/jpeg"
+                }
+              )
+            );
+
+          },
+          "image/jpeg",
+          0.90
+        );
+
+      };
+
+      image.onerror = function() {
+
+        reject(
+          new Error(
+            "Image load failed"
+          )
+        );
+
+      };
+
+      image.src = event.target.result;
+
+    };
+
+    reader.onerror = function() {
+
+      reject(
+        new Error(
+          "File read failed"
+        )
+      );
+
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+
+/* =========================
+   IMAGE PREVIEWS
+========================= */
+
+document
+  .getElementById("profile_photo")
+  .addEventListener("change", function() {
+
+    previewImage(
+      this.files[0],
+      "profilePreview"
+    );
+
+  });
+
+
+document
+  .getElementById("nid_photo")
+  .addEventListener("change", function() {
+
+    previewImage(
+      this.files[0],
+      "nidPreview"
+    );
+
+  });
+
+
+document
+  .getElementById("signature_photo")
+  .addEventListener("change", function() {
+
+    previewImage(
+      this.files[0],
+      "signaturePreview"
+    );
+
+  });
+
+
+function previewImage(file, elementId) {
+
+  if (!file) return;
+
+  const reader =
+    new FileReader();
+
+  reader.onload = function(event) {
+
+    const image =
+      document.getElementById(elementId);
+
+    image.src =
+      event.target.result;
+
+    image.style.display =
+      "block";
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* =========================
+   DETAILS
+========================= */
+
+function showDetails(id) {
+
+  const employee =
+    employees.find(
+      e => Number(e.id) === Number(id)
+    );
+
+  if (!employee) {
+
+    alert("Employee তথ্য পাওয়া যায়নি।");
+
+    return;
+  }
+
+
+  const modal =
+    document.getElementById("detailsModal");
+
+  const content =
+    document.getElementById("detailsContent");
+
+
+  const profile =
+    employee.profile_photo
+      ? getUploadUrl(employee.profile_photo)
+      : "";
+
+
+  const profileHTML =
+    profile
+      ? `
+        <img
+          src="${escapeAttribute(profile)}"
+          class="detail-profile"
+          alt="Employee Photo">
+      `
+      : `
+        <div>
+          📷 Photo নেই
+        </div>
+      `;
+
+
+  let documentsHTML = "";
+
+
+  /* MAIN ADMIN ONLY */
+
+  if (currentRole === "main_admin") {
+
+    const nid =
+      employee.nid_photo
+        ? getUploadUrl(employee.nid_photo)
+        : "";
+
+    const signature =
+      employee.signature_photo
+        ? getUploadUrl(employee.signature_photo)
+        : "";
+
+
+    documentsHTML = `
+      <div class="document-section">
+
+        <h3>🔐 Sensitive Documents</h3>
+
+        <div class="document-grid">
+
+          <div class="document-box">
+
+            <h4>🪪 NID Card</h4>
+
+            ${
+              nid
+                ? `
+                  <img
+                    src="${escapeAttribute(nid)}"
+                    class="detail-nid"
+                    alt="NID">
+                `
+                : "NID Photo নেই"
+            }
+
+          </div>
+
+
+          <div class="document-box">
+
+            <h4>✍️ Signature</h4>
+
+            ${
+              signature
+                ? `
+                  <img
+                    src="${escapeAttribute(signature)}"
+                    class="detail-signature"
+                    alt="Signature">
+                `
+                : "Signature নেই"
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+  } else {
+
+    documentsHTML = `
+      <div class="document-section">
+
+        <div class="notice">
+          🔒 NID এবং Signature শুধুমাত্র Main Admin দেখতে পারবেন।
+        </div>
+
+      </div>
+    `;
+
+  }
+
+
+  content.innerHTML = `
+
+    <div class="detail-header">
+
+      ${profileHTML}
+
+      <h2>
+        👷 ${escapeHTML(employee.name || "Employee")}
+      </h2>
+
+      <div class="user-id">
+        User ID:
+        ${escapeHTML(employee.user_id || "—")}
+      </div>
+
+    </div>
+
+
+    <div class="detail-grid">
+
+      <div class="detail-item">
+        <strong>Employee ID</strong>
+        #${employee.id}
+      </div>
+
+      <div class="detail-item">
+        <strong>User ID</strong>
+        ${escapeHTML(employee.user_id || "—")}
+      </div>
+
+      <div class="detail-item">
+        <strong>Name</strong>
+        ${escapeHTML(employee.name || "—")}
+      </div>
+
+      ${
+        currentRole === "main_admin"
+          ? `
+            <div class="detail-item">
+              <strong>Phone</strong>
+              ${escapeHTML(employee.phone || "—")}
+            </div>
+
+            <div class="detail-item">
+              <strong>Email</strong>
+              ${escapeHTML(employee.email || "—")}
+            </div>
+          `
+          : ""
+      }
+
+      <div class="detail-item">
+        <strong>Address</strong>
+        ${escapeHTML(employee.address || "—")}
+      </div>
+
+      <div class="detail-item">
+        <strong>Zone</strong>
+        ${escapeHTML(employee.zone || "—")}
+      </div>
+
+      <div class="detail-item">
+        <strong>Commission</strong>
+        ${Number(
+          employee.commission_percent || 0
+        ).toFixed(2)}%
+      </div>
+
+      <div class="detail-item">
+        <strong>Salary</strong>
+        ৳${Number(
+          employee.salary || 0
+        ).toFixed(2)}
+      </div>
+
+      <div class="detail-item">
+        <strong>Payment Type</strong>
+        ${escapeHTML(
+          employee.payment_type || "—"
+        )}
+      </div>
+
+      <div class="detail-item">
+        <strong>Status</strong>
+        ${
+          employee.status === "active"
+            ? "🟢 Active"
+            : "🔴 Inactive"
+        }
+      </div>
+
+      <div class="detail-item">
+        <strong>Created At</strong>
+        ${formatDate(employee.created_at)}
+      </div>
+
+    </div>
+
+    ${documentsHTML}
+
+  `;
+
+
+  modal.style.display =
+    "block";
+
+}
+
+
+/* =========================
+   CLOSE DETAILS
+========================= */
+
+function closeDetails() {
+
+  document
+    .getElementById("detailsModal")
+    .style.display = "none";
+
+}
+
+
+window.addEventListener(
+  "click",
+  function(event) {
+
+    const modal =
+      document.getElementById("detailsModal");
+
+    if (event.target === modal) {
+
+      closeDetails();
+
+    }
+
+  }
+);
+
+
+/* =========================
+   EDIT EMPLOYEE
+========================= */
+
+function editEmployee(id) {
+
+  const employee =
+    employees.find(
+      e => Number(e.id) === Number(id)
+    );
+
+  if (!employee) {
+
+    alert("Employee পাওয়া যায়নি।");
+
+    return;
+  }
+
+
+  editingEmployeeId = id;
+
+
+  document.getElementById("employeeId").value =
+    employee.id;
+
+  document.getElementById("name").value =
+    employee.name || "";
+
+  document.getElementById("phone").value =
+    employee.phone || "";
+
+  document.getElementById("email").value =
+    employee.email || "";
+
+  document.getElementById("address").value =
+    employee.address || "";
+
+  document.getElementById("zone").value =
+    employee.zone || "";
+
+  document.getElementById("commission_percent").value =
+    employee.commission_percent || 0;
+
+  document.getElementById("salary").value =
+    employee.salary || 0;
+
+  document.getElementById("payment_type").value =
+    employee.payment_type || "commission";
+
+  document.getElementById("status").value =
+    employee.status || "active";
+
+  document.getElementById("password").value =
+    "";
+
+  document.getElementById("formTitle").textContent =
+    "✏️ Employee তথ্য Update করুন";
+
+  document.getElementById("saveButton").textContent =
+    "💾 Employee Update করুন";
+
+
+  const section =
+    document.getElementById("employeeFormSection");
+
+  section.style.display =
+    "block";
+
+  section.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+
+/* =========================
+   RESET FORM
+========================= */
+
+function resetForm() {
+
+  editingEmployeeId = null;
+
+  document
+    .getElementById("employeeForm")
+    .reset();
+
+  document.getElementById("employeeId").value =
+    "";
+
+  document.getElementById("commission_percent").value =
+    0;
+
+  document.getElementById("salary").value =
+    0;
+
+  document.getElementById("payment_type").value =
+    "commission";
+
+  document.getElementById("status").value =
+    "active";
+
+  document.getElementById("formTitle").textContent =
+    "👷 নতুন Employee যোগ করুন";
+
+  document.getElementById("saveButton").textContent =
+    "✅ Employee যোগ করুন";
+
+
+  [
+    "profilePreview",
+    "nidPreview",
+    "signaturePreview"
+  ].forEach(id => {
+
+    const img =
+      document.getElementById(id);
+
+    img.src = "";
+
+    img.style.display =
+      "none";
+
+  });
+
+}
+
+
+function cancelForm() {
+
+  resetForm();
+
+  document
+    .getElementById("employeeFormSection")
+    .style.display = "none";
+
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+async function deleteEmployee(id) {
+
+  if (currentRole !== "main_admin") {
+
+    alert(
+      "❌ শুধুমাত্র Main Admin Employee Delete করতে পারবেন।"
+    );
+
+    return;
+  }
+
+
+  const employee =
+    employees.find(
+      e => Number(e.id) === Number(id)
+    );
+
+  if (!employee) return;
+
+
+  const confirmed =
+    confirm(
+      `আপনি কি "${employee.name}"-কে Delete করতে চান?`
+    );
+
+  if (!confirmed) return;
+
+
+  try {
+
+    const response =
+      await fetch(
+        `${API_URL}/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization:
+              "Bearer " + token
+          }
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Delete failed"
+      );
+
+    }
+
+
+    alert(
+      "✅ Employee সফলভাবে Delete হয়েছে।"
+    );
+
+
+    loadEmployees();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      "❌ Delete করা যায়নি:\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+async function toggleStatus(id) {
+
+  const employee =
+    employees.find(
+      e => Number(e.id) === Number(id)
+    );
+
+  if (!employee) return;
+
+
+  const newStatus =
+    employee.status === "active"
+      ? "inactive"
+      : "active";
+
+
+  const confirmed =
+    confirm(
+      `${employee.name}-এর Status "${newStatus}" করতে চান?`
+    );
+
+  if (!confirmed) return;
+
+
+  try {
+
+    const response =
+      await fetch(
+        `${API_URL}/${id}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            Authorization:
+              "Bearer " + token
+          },
+
+          body: JSON.stringify({
+            status: newStatus
+          })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Status update failed"
+      );
+
+    }
+
+
+    alert(
+      "✅ Status update হয়েছে।"
+    );
+
+
+    loadEmployees();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      "❌ Status update করা যায়নি:\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   EMPLOYEE ORDERS
+========================= */
+
+function viewEmployeeOrders(id) {
+
+  window.location.href =
+    `employee-orders.html?id=${id}`;
+
+}
+
+
+/* =========================
+   UPLOAD URL
+========================= */
+
+function getUploadUrl(path) {
+
+  if (!path) return "";
+
+  if (
+    path.startsWith("http://") ||
+    path.startsWith("https://")
+  ) {
+    return path;
+  }
+
+  if (path.startsWith("/")) {
+
+    return "http://localhost:5000" + path;
+
+  }
+
+  return "http://localhost:5000/" + path;
+
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+function formatDate(date) {
+
+  if (!date) return "—";
+
+  try {
+
+    return new Date(date)
+      .toLocaleString("bn-BD");
+
+  } catch {
+
+    return date;
+
+  }
+
+}
+
+
+/* =========================
+   SECURITY HELPERS
+========================= */
+
+function escapeHTML(value) {
+
+  if (value === null ||
+      value === undefined) {
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+
+  return escapeHTML(value);
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function goDashboard() {
+
+  window.location.href =
+    "index.html";
+
+}
+
+
+function logout() {
+
+  localStorage.removeItem("admin_token");
+  localStorage.removeItem("admin_role");
+  localStorage.removeItem("admin_name");
+
+  window.location.href =
+    "../admin-login.html";
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+checkAuth();
+
+</script>
+
+</body>
+</html>

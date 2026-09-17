@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html lang="bn">
+
+<head>
+
+  <meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+  <title>Friends Corporation - Order Details</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #0b7a3b;
+    }
+
+    .back-button {
+      text-decoration: none;
+      background: #0b7a3b;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    h2 {
+      color: #0b7a3b;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: #666;
+    }
+
+    .value {
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .product {
+      display: flex;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .product:last-child {
+      border-bottom: none;
+    }
+
+    .product img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #eee;
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .product-name {
+      font-weight: bold;
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .loading {
+      background: white;
+      padding: 40px;
+      text-align: center;
+      border-radius: 12px;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #842029;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+
+      .header-content {
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .value {
+        text-align: left;
+      }
+
+      .product img {
+        width: 65px;
+        height: 65px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<header>
+
+  <div class="header-content">
+
+```
+<div class="logo">
+  Friends Corporation
+</div>
+
+<a
+  href="admin/index.html"
+  class="back-button"
+>
+  ← Admin Dashboard
+</a>
+```
+
+  </div>
+
+</header>
+
+<main class="container">
+
+  <h1>
+    📦 Order Details
+  </h1>
+
+  <div id="content">
+
+```
+<div class="loading">
+  Order Details লোড হচ্ছে...
+</div>
+```
+
+  </div>
+
+</main>
+
+<script>
+
+  const API_URL =
+    "http://localhost:5000/api/admin-orders";
+
+
+  const token =
+    localStorage.getItem("admin_token");
+
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+
+  const orderId =
+    params.get("id");
+
+
+  const content =
+    document.getElementById("content");
+
+
+  if (!token) {
+
+    content.innerHTML = `
+      <div class="error">
+        Admin Login প্রয়োজন।
+      </div>
+    `;
+
+  }
+
+  else if (!orderId) {
+
+    content.innerHTML = `
+      <div class="error">
+        Order ID পাওয়া যায়নি।
+      </div>
+    `;
+
+  }
+
+  else {
+
+    loadOrderDetails();
+
+  }
+
+
+  async function loadOrderDetails() {
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL +
+          "/" +
+          encodeURIComponent(orderId) +
+          "/details",
+          {
+            method: "GET",
+
+            headers: {
+              "Authorization":
+                "Bearer " + token,
+
+              "Content-Type":
+                "application/json"
+            }
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      console.log(
+        "ADMIN ORDER DETAILS:",
+        data
+      );
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Order Details load failed"
+        );
+
+      }
+
+
+      displayOrder(
+        data.order,
+        data.items
+      );
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "ORDER DETAILS ERROR:",
+        error
+      );
+
+
+      content.innerHTML = `
+        <div class="error">
+
+          <h3>
+            ⚠️ Order Details পাওয়া যাচ্ছে না
+          </h3>
+
+          <p>
+            ${escapeHTML(error.message)}
+          </p>
+
+        </div>
+      `;
+
+    }
+
+  }
+
+
+  function displayOrder(
+    order,
+    items
+  ) {
+
+    const total =
+      Number(order.total_amount) || 0;
+
+
+    const delivery =
+      Number(order.delivery_charge) || 0;
+
+
+    const grandTotal =
+      total;
+
+
+    let productsHTML = "";
+
+
+    if (
+      !Array.isArray(items) ||
+      items.length === 0
+    ) {
+
+      productsHTML = `
+        <p>
+          এই Order-এ কোনো পণ্য পাওয়া যায়নি।
+        </p>
+      `;
+
+    }
+
+    else {
+
+      productsHTML =
+        items.map(item => {
+
+          const quantity =
+            Number(item.quantity) || 0;
+
+
+          const unitPrice =
+            Number(item.unit_price) || 0;
+
+
+          const subtotal =
+            Number(item.subtotal) || 0;
+
+
+          return `
+
+            <div class="product">
+
+              <img
+                src="${escapeHTML(
+                  item.image_url || ""
+                )}"
+                onerror="
+                  this.style.display='none'
+                "
+              >
+
+              <div class="product-info">
+
+                <div class="product-name">
+
+                  ${escapeHTML(
+                    item.product_name || "-"
+                  )}
+
+                </div>
+
+                <div>
+                  Quantity:
+                  ${quantity}
+                </div>
+
+                <div>
+                  Unit Price:
+                  ৳${unitPrice.toFixed(2)}
+                </div>
+
+                <div>
+                  Subtotal:
+                  ৳${subtotal.toFixed(2)}
+                </div>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }).join("");
+
+    }
+
+
+    content.innerHTML = `
+
+      <div class="card">
+
+        <h2>
+          📋 Order Information
+        </h2>
+
+        <div class="info-row">
+          <span class="label">
+            Order ID
+          </span>
+
+          <span class="value">
+            #${escapeHTML(
+              String(order.id)
+            )}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Customer
+          </span>
+
+          <span class="value">
+            ${escapeHTML(
+              order.customer_name || "-"
+            )}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Phone
+          </span>
+
+          <span class="value">
+            ${escapeHTML(
+              order.customer_phone || "-"
+            )}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Address
+          </span>
+
+          <span class="value">
+            ${escapeHTML(
+              order.delivery_address || "-"
+            )}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Order Status
+          </span>
+
+          <span class="value">
+            ${escapeHTML(
+              order.order_status || "-"
+            )}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Payment Method
+          </span>
+
+          <span class="value">
+            ${escapeHTML(
+              order.payment_method || "-"
+            )}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Payment Status
+          </span>
+
+          <span class="value">
+            ${escapeHTML(
+              order.payment_status || "-"
+            )}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Assigned Employee
+          </span>
+
+          <span class="value">
+            ${escapeHTML(
+              order.employee_name || "Not Assigned"
+            )}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Product Total
+          </span>
+
+          <span class="value">
+            ৳${total.toFixed(2)}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Delivery Charge
+          </span>
+
+          <span class="value">
+            ৳${delivery.toFixed(2)}
+          </span>
+        </div>
+
+
+        <div class="info-row">
+          <span class="label">
+            Grand Total
+          </span>
+
+          <span class="value">
+            ৳${grandTotal.toFixed(2)}
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          🛒 Ordered Products
+        </h2>
+
+        ${productsHTML}
+
+      </div>
+
+    `;
+
+  }
+
+
+  function escapeHTML(value) {
+
+    return String(value)
+
+      .replace(/&/g, "&amp;")
+
+      .replace(/</g, "&lt;")
+
+      .replace(/>/g, "&gt;")
+
+      .replace(/"/g, "&quot;")
+
+      .replace(/'/g, "&#039;");
+
+  }
+
+</script>
+
+</body>
+
+</html>

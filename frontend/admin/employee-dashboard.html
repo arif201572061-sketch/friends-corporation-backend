@@ -1,0 +1,3595 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Friends Corporation - Employee Dashboard</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+
+    .header {
+      height: 65px;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: bold;
+      color: #166534;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .employee-name-top {
+      font-weight: bold;
+    }
+
+    .menu-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #166534;
+      color: white;
+      font-size: 21px;
+    }
+
+    /* =========================
+       SIDE MENU
+    ========================== */
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: -310px;
+      width: 300px;
+      height: 100vh;
+      background: #ffffff;
+      box-shadow: -5px 0 20px rgba(0,0,0,0.12);
+      z-index: 2000;
+      transition: 0.3s;
+      overflow-y: auto;
+    }
+
+    .side-menu.active {
+      right: 0;
+    }
+
+    .menu-header {
+      height: 80px;
+      background: #166534;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .menu-header h2 {
+      font-size: 20px;
+    }
+
+    .close-menu {
+      background: transparent;
+      color: white;
+      font-size: 28px;
+    }
+
+    .menu-profile {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .menu-profile img {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #166534;
+      margin-bottom: 10px;
+    }
+
+    .menu-profile h3 {
+      font-size: 17px;
+    }
+
+    .menu-profile p {
+      color: #6b7280;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    .menu-item {
+      width: 100%;
+      padding: 16px 20px;
+      background: white;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      font-size: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #374151;
+    }
+
+    .menu-item:hover {
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .menu-item.active {
+      background: #dcfce7;
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      color: #dc2626;
+    }
+
+    /* =========================
+       OVERLAY
+    ========================== */
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1500;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* =========================
+       MAIN
+    ========================== */
+
+    .main {
+      padding: 90px 25px 30px;
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .page-title {
+      margin-bottom: 20px;
+    }
+
+    .page-title h1 {
+      font-size: 27px;
+      margin-bottom: 5px;
+    }
+
+    .page-title p {
+      color: #6b7280;
+    }
+
+    /* =========================
+       DASHBOARD CARDS
+    ========================== */
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .summary-card {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .summary-card .icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .summary-card h3 {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .summary-card .value {
+      font-size: 25px;
+      font-weight: bold;
+      color: #166534;
+    }
+
+    /* =========================
+       SHOP
+    ========================== */
+
+    .shop-toolbar {
+      background: white;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .shop-toolbar input,
+    .shop-toolbar select {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .product-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      overflow: hidden;
+      transition: 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 180px;
+      background: #f3f4f6;
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding: 15px;
+    }
+
+    .product-name {
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .product-price {
+      color: #166534;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .product-unit {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .stock {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .stock.good {
+      color: #15803d;
+    }
+
+    .stock.low {
+      color: #d97706;
+      font-weight: bold;
+    }
+
+    .stock.out {
+      color: #dc2626;
+      font-weight: bold;
+    }
+
+    .add-cart {
+      width: 100%;
+      margin-top: 12px;
+      padding: 11px;
+      background: #166534;
+      color: white;
+      border-radius: 8px;
+    }
+
+    .add-cart:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    /* =========================
+       CART
+    ========================== */
+
+    .cart-box,
+    .customer-box,
+    .orders-box,
+    .profile-box,
+    .settings-box {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+      gap: 15px;
+    }
+
+    .cart-item-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quantity-controls button {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .remove-cart {
+      color: #dc2626;
+      background: transparent;
+    }
+
+    .cart-total {
+      margin-top: 20px;
+      text-align: right;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .primary-btn {
+      padding: 12px 18px;
+      background: #166534;
+      color: white;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    .primary-btn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .secondary-btn {
+      padding: 12px 18px;
+      background: #e5e7eb;
+      color: #374151;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    /* =========================
+       CUSTOMER
+    ========================== */
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .customer-found {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #dcfce7;
+      color: #166534;
+      display: none;
+    }
+
+    .customer-not-found {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #fef3c7;
+      color: #92400e;
+      display: none;
+    }
+
+    /* =========================
+       ORDERS
+    ========================== */
+
+    .order-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .order-id {
+      font-weight: bold;
+    }
+
+    .order-status {
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 12px;
+    }
+
+    .order-info {
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* =========================
+       PROFILE
+    ========================== */
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .profile-photo {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #166534;
+    }
+
+    .profile-info p {
+      margin: 7px 0;
+      color: #555;
+    }
+
+    /* =========================
+       EMPTY
+    ========================== */
+
+    .empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: #6b7280;
+    }
+
+    .empty-icon {
+      font-size: 50px;
+      margin-bottom: 10px;
+    }
+
+    /* =========================
+       TOAST
+    ========================== */
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      padding: 14px 18px;
+      background: #166534;
+      color: white;
+      border-radius: 8px;
+      z-index: 5000;
+      display: none;
+      max-width: 350px;
+    }
+
+    .toast.error {
+      background: #dc2626;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 1100px) {
+
+      .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 750px) {
+
+      .header {
+        padding: 0 15px;
+      }
+
+      .employee-name-top {
+        display: none;
+      }
+
+      .main {
+        padding: 85px 15px 25px;
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .shop-toolbar {
+        flex-direction: column;
+      }
+
+    }
+
+    @media (max-width: 500px) {
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================== -->
+
+<header class="header">
+
+  <div class="brand">
+    Friends Corporation
+  </div>
+
+  <div class="header-right">
+
+    <span
+      class="employee-name-top"
+      id="topEmployeeName"
+    >
+      Employee
+    </span>
+
+    <button
+      class="menu-btn"
+      onclick="openMenu()"
+    >
+      ☰
+    </button>
+
+  </div>
+
+</header>
+
+
+<!-- =========================
+     SIDE MENU
+========================== -->
+
+<div
+  class="overlay"
+  id="overlay"
+  onclick="closeMenu()"
+></div>
+
+
+<aside
+  class="side-menu"
+  id="sideMenu"
+>
+
+  <div class="menu-header">
+
+    <h2>
+      Employee Menu
+    </h2>
+
+    <button
+      class="close-menu"
+      onclick="closeMenu()"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+  <div class="menu-profile">
+
+    <img
+      id="menuProfilePhoto"
+      src="https://via.placeholder.com/100"
+      alt="Profile"
+    >
+
+    <h3 id="menuEmployeeName">
+      Employee
+    </h3>
+
+    <p id="menuEmployeePhone">
+      -
+    </p>
+
+  </div>
+
+
+  <button
+    class="menu-item active"
+    onclick="showPage('dashboardPage', this)"
+  >
+    🏠 Dashboard
+  </button>
+
+
+  <button
+    class="menu-item"
+    onclick="goShopping(this)"
+  >
+    🛒 কাস্টমারের জন্য বাজার
+  </button>
+
+
+  <button
+    class="menu-item"
+    onclick="openCartPage(this)"
+  >
+    🛍️ Cart
+    <span id="menuCartCount">
+      (0)
+    </span>
+  </button>
+
+
+  <button
+    class="menu-item"
+    onclick="showPage('ordersPage', this); loadOrders()"
+  >
+    📦 আমার অর্ডার
+  </button>
+
+
+  <button
+    class="menu-item"
+    onclick="showPage('salesPage', this); loadSalesSummary()"
+  >
+    💰 আমার বিক্রয়
+  </button>
+
+
+  <button
+    class="menu-item"
+    onclick="showPage('profilePage', this)"
+  >
+    👤 আমার প্রোফাইল
+  </button>
+
+
+  <button
+    class="menu-item"
+    onclick="showPage('settingsPage', this)"
+  >
+    ⚙️ Settings
+  </button>
+
+
+  <button
+    class="menu-item logout-btn"
+    onclick="logout()"
+  >
+    🚪 Logout
+  </button>
+
+</aside>
+
+
+<!-- =========================
+     MAIN
+========================== -->
+
+<main class="main">
+
+
+  <!-- =====================
+       DASHBOARD
+  ====================== -->
+
+  <section
+    id="dashboardPage"
+    class="page active"
+  >
+
+    <div class="page-title">
+
+      <h1>
+        স্বাগতম,
+        <span id="dashboardEmployeeName">
+          Employee
+        </span>
+      </h1>
+
+      <p>
+        আপনার Employee Dashboard
+      </p>
+
+    </div>
+
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+
+        <div class="icon">
+          💰
+        </div>
+
+        <h3>
+          মোট বিক্রয়
+        </h3>
+
+        <div
+          class="value"
+          id="dashboardSales"
+        >
+          ৳0.00
+        </div>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <div class="icon">
+          📈
+        </div>
+
+        <h3>
+          মোট Profit
+        </h3>
+
+        <div
+          class="value"
+          id="dashboardProfit"
+        >
+          ৳0.00
+        </div>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <div class="icon">
+          📊
+        </div>
+
+        <h3>
+          Commission Rate
+        </h3>
+
+        <div
+          class="value"
+          id="dashboardCommissionRate"
+        >
+          0%
+        </div>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <div class="icon">
+          💵
+        </div>
+
+        <h3>
+          মোট Commission
+        </h3>
+
+        <div
+          class="value"
+          id="dashboardCommission"
+        >
+          ৳0.00
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="cart-box">
+
+      <h2 style="margin-bottom:10px;">
+        দ্রুত কাজ
+      </h2>
+
+      <p style="color:#6b7280;">
+        কাস্টমারের জন্য পণ্য বিক্রি করতে নিচের বাটনে যান।
+      </p>
+
+      <button
+        class="primary-btn"
+        onclick="goShopping()"
+      >
+        🛒 কাস্টমারের জন্য বাজার করুন
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================
+       SHOPPING
+  ====================== -->
+
+  <section
+    id="shoppingPage"
+    class="page"
+  >
+
+    <div class="page-title">
+
+      <h1>
+        কাস্টমারের জন্য বাজার
+      </h1>
+
+      <p>
+        কাস্টমারের জন্য প্রয়োজনীয় পণ্য নির্বাচন করুন
+      </p>
+
+    </div>
+
+
+    <div class="shop-toolbar">
+
+      <input
+        type="text"
+        id="productSearch"
+        placeholder="পণ্যের নাম দিয়ে Search করুন..."
+        oninput="renderProducts()"
+      >
+
+
+      <select
+        id="categoryFilter"
+        onchange="renderProducts()"
+      >
+
+        <option value="">
+          সব Category
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div
+      id="productGrid"
+      class="product-grid"
+    ></div>
+
+  </section>
+
+
+  <!-- =====================
+       CART
+  ====================== -->
+
+  <section
+    id="cartPage"
+    class="page"
+  >
+
+    <div class="page-title">
+
+      <h1>
+        🛍️ Shopping Cart
+      </h1>
+
+      <p>
+        নির্বাচিত পণ্যগুলো যাচাই করুন
+      </p>
+
+    </div>
+
+
+    <div
+      id="cartContainer"
+      class="cart-box"
+    ></div>
+
+  </section>
+
+
+  <!-- =====================
+       CUSTOMER CHECKOUT
+  ====================== -->
+
+  <section
+    id="customerPage"
+    class="page"
+  >
+
+    <div class="page-title">
+
+      <h1>
+        👤 কাস্টমারের তথ্য
+      </h1>
+
+      <p>
+        অর্ডার সম্পন্ন করার জন্য কাস্টমারের তথ্য দিন
+      </p>
+
+    </div>
+
+
+    <div class="customer-box">
+
+      <div class="form-group">
+
+        <label>
+          কাস্টমারের ফোন নম্বর *
+        </label>
+
+        <input
+          type="text"
+          id="customerPhone"
+          placeholder="01XXXXXXXXX"
+          onblur="searchCustomer()"
+        >
+
+      </div>
+
+
+      <button
+        class="secondary-btn"
+        onclick="searchCustomer()"
+      >
+        🔍 কাস্টমার খুঁজুন
+      </button>
+
+
+      <div
+        id="customerFound"
+        class="customer-found"
+      >
+        কাস্টমার পাওয়া গেছে।
+      </div>
+
+
+      <div
+        id="customerNotFound"
+        class="customer-not-found"
+      >
+        এই ফোন নম্বরে কোনো কাস্টমার পাওয়া যায়নি। নতুন কাস্টমার হিসেবে তথ্য দিন।
+      </div>
+
+
+      <div
+        class="form-group"
+        style="margin-top:20px;"
+      >
+
+        <label>
+          কাস্টমারের নাম *
+        </label>
+
+        <input
+          type="text"
+          id="customerName"
+          placeholder="কাস্টমারের নাম"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Delivery Address *
+        </label>
+
+        <textarea
+          id="customerAddress"
+          placeholder="কাস্টমারের ঠিকানা"
+        ></textarea>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Delivery Charge
+        </label>
+
+        <input
+          type="number"
+          id="deliveryCharge"
+          value="0"
+          min="0"
+          step="0.01"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Payment Method
+        </label>
+
+        <select id="paymentMethod">
+
+          <option value="cash_on_delivery">
+            Cash on Delivery
+          </option>
+
+          <option value="online">
+            Online
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div
+        id="checkoutTotal"
+        style="
+          font-size:20px;
+          font-weight:bold;
+          margin-top:20px;
+        "
+      >
+        মোট: ৳0.00
+      </div>
+
+
+      <button
+        id="confirmOrderButton"
+        class="primary-btn"
+        onclick="placeCustomerOrder(this)"
+      >
+        ✅ অর্ডার Confirm করুন
+      </button>
+
+
+      <button
+        class="secondary-btn"
+        onclick="openCartPage()"
+      >
+        ← Cart-এ ফিরে যান
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================
+       ORDERS
+  ====================== -->
+
+  <section
+    id="ordersPage"
+    class="page"
+  >
+
+    <div class="page-title">
+
+      <h1>
+        📦 আমার অর্ডার
+      </h1>
+
+      <p>
+        আপনার মাধ্যমে করা কাস্টমার অর্ডার
+      </p>
+
+    </div>
+
+
+    <div
+      id="ordersContainer"
+      class="orders-box"
+    >
+
+      <div class="empty">
+        Loading...
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================
+       SALES
+  ====================== -->
+
+  <section
+    id="salesPage"
+    class="page"
+  >
+
+    <div class="page-title">
+
+      <h1>
+        💰 আমার বিক্রয়
+      </h1>
+
+      <p>
+        আপনার বিক্রয়, Profit এবং Commission
+      </p>
+
+    </div>
+
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+
+        <div class="icon">
+          📦
+        </div>
+
+        <h3>
+          মোট অর্ডার
+        </h3>
+
+        <div
+          class="value"
+          id="salesOrders"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <div class="icon">
+          💰
+        </div>
+
+        <h3>
+          মোট বিক্রয়
+        </h3>
+
+        <div
+          class="value"
+          id="salesTotal"
+        >
+          ৳0.00
+        </div>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <div class="icon">
+          📈
+        </div>
+
+        <h3>
+          মোট Profit
+        </h3>
+
+        <div
+          class="value"
+          id="salesProfit"
+        >
+          ৳0.00
+        </div>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <div class="icon">
+          💵
+        </div>
+
+        <h3>
+          মোট Commission
+        </h3>
+
+        <div
+          class="value"
+          id="salesCommission"
+        >
+          ৳0.00
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="cart-box">
+
+      <h3>
+        Commission Rate:
+        <span id="salesCommissionRate">
+          0%
+        </span>
+      </h3>
+
+      <p
+        style="
+          margin-top:8px;
+          color:#6b7280;
+        "
+      >
+        Commission শুধুমাত্র Profit-এর উপর হিসাব করা হচ্ছে।
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================
+       PROFILE
+  ====================== -->
+
+  <section
+    id="profilePage"
+    class="page"
+  >
+
+    <div class="page-title">
+
+      <h1>
+        👤 আমার প্রোফাইল
+      </h1>
+
+      <p>
+        আপনার Employee তথ্য
+      </p>
+
+    </div>
+
+
+    <div class="profile-box">
+
+      <div class="profile-header">
+
+        <img
+          id="profilePhoto"
+          class="profile-photo"
+          src="https://via.placeholder.com/100"
+          alt="Profile"
+        >
+
+        <div>
+
+          <h2 id="profileName">
+            Employee
+          </h2>
+
+          <p id="profilePhone">
+            ফোন: -
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="profile-info">
+
+        <p>
+          <strong>Employee ID:</strong>
+          <span id="profileId">-</span>
+        </p>
+
+        <p>
+          <strong>Email:</strong>
+          <span id="profileEmail">-</span>
+        </p>
+
+        <p>
+          <strong>Address:</strong>
+          <span id="profileAddress">-</span>
+        </p>
+
+        <p>
+          <strong>Zone:</strong>
+          <span id="profileZone">-</span>
+        </p>
+
+        <p>
+          <strong>Commission:</strong>
+          <span id="profileCommission">0%</span>
+        </p>
+
+        <p>
+          <strong>Payment Type:</strong>
+          <span id="profilePaymentType">-</span>
+        </p>
+
+        <p>
+          <strong>Status:</strong>
+          <span id="profileStatus">-</span>
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================
+       SETTINGS
+  ====================== -->
+
+  <section
+    id="settingsPage"
+    class="page"
+  >
+
+    <div class="page-title">
+
+      <h1>
+        ⚙️ Settings
+      </h1>
+
+      <p>
+        Dashboard Settings
+      </p>
+
+    </div>
+
+
+    <div class="settings-box">
+
+      <h3>
+        Account
+      </h3>
+
+      <p
+        style="
+          margin-top:10px;
+          color:#6b7280;
+        "
+      >
+        আপনার Employee account থেকে বের হতে Logout ব্যবহার করুন।
+      </p>
+
+
+      <button
+        class="primary-btn"
+        onclick="logout()"
+      >
+        🚪 Logout
+      </button>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- =========================
+     TOAST
+========================== -->
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
+
+<script>
+
+  /* =========================
+     GLOBAL VARIABLES
+  ========================== */
+
+  const API_BASE =
+    "http://localhost:5000";
+
+
+  const token =
+    localStorage.getItem(
+      "employee_token"
+    );
+
+
+  let employee = null;
+
+  let products = [];
+
+  let cart = [];
+
+
+  /* =========================
+     AUTH CHECK
+  ========================== */
+
+  if (!token) {
+
+    window.location.href =
+      "/employee-login";
+
+  }
+
+
+  try {
+
+    employee =
+      JSON.parse(
+        localStorage.getItem(
+          "employee"
+        )
+      );
+
+  } catch (error) {
+
+    employee = null;
+
+  }
+
+
+  if (!employee) {
+
+    window.location.href =
+      "/employee-login";
+
+  }
+
+
+  /* =========================
+     HEADER EMPLOYEE INFO
+  ========================== */
+
+  function loadEmployeeInfo() {
+
+    const name =
+      employee?.name ||
+      "Employee";
+
+
+    const phone =
+      employee?.phone ||
+      "-";
+
+
+    document.getElementById(
+      "topEmployeeName"
+    ).textContent = name;
+
+
+    document.getElementById(
+      "dashboardEmployeeName"
+    ).textContent = name;
+
+
+    document.getElementById(
+      "menuEmployeeName"
+    ).textContent = name;
+
+
+    document.getElementById(
+      "menuEmployeePhone"
+    ).textContent = phone;
+
+
+    document.getElementById(
+      "profileName"
+    ).textContent = name;
+
+
+    document.getElementById(
+      "profilePhone"
+    ).textContent =
+      "ফোন: " + phone;
+
+
+    document.getElementById(
+      "profileId"
+    ).textContent =
+      employee?.id || "-";
+
+
+    document.getElementById(
+      "profileEmail"
+    ).textContent =
+      employee?.email || "-";
+
+
+    document.getElementById(
+      "profileAddress"
+    ).textContent =
+      employee?.address || "-";
+
+
+    document.getElementById(
+      "profileZone"
+    ).textContent =
+      employee?.zone || "-";
+
+
+    document.getElementById(
+      "profileCommission"
+    ).textContent =
+      Number(
+        employee?.commission_percent || 0
+      ) + "%";
+
+
+    document.getElementById(
+      "profilePaymentType"
+    ).textContent =
+      employee?.payment_type || "-";
+
+
+    document.getElementById(
+      "profileStatus"
+    ).textContent =
+      employee?.status || "-";
+
+
+    const photo =
+      employee?.profile_photo;
+
+
+    if (photo) {
+
+      let photoUrl =
+        photo;
+
+
+      if (
+        !photo.startsWith("http")
+      ) {
+
+        photoUrl =
+          API_BASE +
+          "/" +
+          photo.replace(
+            /^\/+/,
+            ""
+          );
+
+      }
+
+
+      document.getElementById(
+        "profilePhoto"
+      ).src = photoUrl;
+
+
+      document.getElementById(
+        "menuProfilePhoto"
+      ).src = photoUrl;
+
+    }
+
+  }
+
+
+  /* =========================
+     MENU
+  ========================== */
+
+  function openMenu() {
+
+    document
+      .getElementById("sideMenu")
+      .classList.add("active");
+
+
+    document
+      .getElementById("overlay")
+      .classList.add("active");
+
+  }
+
+
+  function closeMenu() {
+
+    document
+      .getElementById("sideMenu")
+      .classList.remove("active");
+
+
+    document
+      .getElementById("overlay")
+      .classList.remove("active");
+
+  }
+
+
+  /* =========================
+     PAGE SWITCH
+  ========================== */
+
+  function showPage(
+    pageId,
+    button = null
+  ) {
+
+    document
+      .querySelectorAll(".page")
+      .forEach(page => {
+
+        page.classList.remove(
+          "active"
+        );
+
+      });
+
+
+    const page =
+      document.getElementById(
+        pageId
+      );
+
+
+    if (page) {
+
+      page.classList.add(
+        "active"
+      );
+
+    }
+
+
+    document
+      .querySelectorAll(".menu-item")
+      .forEach(item => {
+
+        item.classList.remove(
+          "active"
+        );
+
+      });
+
+
+    if (button) {
+
+      button.classList.add(
+        "active"
+      );
+
+    }
+
+
+    closeMenu();
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  /* =========================
+     GO SHOPPING
+  ========================== */
+
+  function goShopping(button = null) {
+
+    showPage(
+      "shoppingPage",
+      button
+    );
+
+
+    loadProducts();
+
+  }
+
+
+  /* =========================
+     OPEN CART PAGE
+  ========================== */
+
+  function openCartPage(
+    button = null
+  ) {
+
+    showPage(
+      "cartPage",
+      button
+    );
+
+
+    renderCart();
+
+  }
+
+
+  /* =========================
+     API HEADERS
+  ========================== */
+
+  function authHeaders() {
+
+    return {
+
+      "Content-Type":
+        "application/json",
+
+      "Authorization":
+        "Bearer " + token
+
+    };
+
+  }
+
+
+  /* =========================
+     TOAST
+  ========================== */
+
+  function showToast(
+    message,
+    error = false
+  ) {
+
+    const toast =
+      document.getElementById(
+        "toast"
+      );
+
+
+    toast.textContent =
+      message;
+
+
+    toast.classList.toggle(
+      "error",
+      error
+    );
+
+
+    toast.style.display =
+      "block";
+
+
+    setTimeout(() => {
+
+      toast.style.display =
+        "none";
+
+    }, 3000);
+
+  }
+
+
+  /* =========================
+     LOAD PRODUCTS
+  ========================== */
+
+  async function loadProducts() {
+
+    const grid =
+      document.getElementById(
+        "productGrid"
+      );
+
+
+    grid.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">⏳</div>
+        পণ্য Loading হচ্ছে...
+      </div>
+    `;
+
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/api/employee-shopping/products",
+          {
+            headers:
+              authHeaders()
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Products load failed"
+        );
+
+      }
+
+
+      products =
+        data.products || [];
+
+
+      loadCategories();
+
+      renderProducts();
+
+    } catch (error) {
+
+      console.error(error);
+
+
+      grid.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">❌</div>
+          পণ্য Load করা যায়নি।
+          <br><br>
+          ${escapeHtml(error.message)}
+        </div>
+      `;
+
+    }
+
+  }
+
+
+  /* =========================
+     CATEGORIES
+  ========================== */
+
+  function loadCategories() {
+
+    const select =
+      document.getElementById(
+        "categoryFilter"
+      );
+
+
+    const categories =
+      [
+        ...new Set(
+          products
+            .map(
+              product =>
+                product.category_name
+            )
+            .filter(Boolean)
+        )
+      ];
+
+
+    select.innerHTML = `
+      <option value="">
+        সব Category
+      </option>
+    `;
+
+
+    categories.forEach(
+      category => {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+
+        option.value =
+          category;
+
+
+        option.textContent =
+          category;
+
+
+        select.appendChild(
+          option
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =========================
+     RENDER PRODUCTS
+  ========================== */
+
+  function renderProducts() {
+
+    const grid =
+      document.getElementById(
+        "productGrid"
+      );
+
+
+    const search =
+      (
+        document.getElementById(
+          "productSearch"
+        ).value || ""
+      )
+        .toLowerCase()
+        .trim();
+
+
+    const category =
+      document.getElementById(
+        "categoryFilter"
+      ).value;
+
+
+    const filtered =
+      products.filter(
+        product => {
+
+          const matchesSearch =
+            !search ||
+            String(
+              product.name || ""
+            )
+              .toLowerCase()
+              .includes(search);
+
+
+          const matchesCategory =
+            !category ||
+            product.category_name ===
+              category;
+
+
+          return (
+            matchesSearch &&
+            matchesCategory
+          );
+
+        }
+      );
+
+
+    if (
+      filtered.length === 0
+    ) {
+
+      grid.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">📦</div>
+          কোনো পণ্য পাওয়া যায়নি।
+        </div>
+      `;
+
+
+      return;
+
+    }
+
+
+    grid.innerHTML =
+      filtered
+        .map(
+          product =>
+            createProductCard(
+              product
+            )
+        )
+        .join("");
+
+  }
+
+
+  /* =========================
+     PRODUCT CARD
+  ========================== */
+
+  function createProductCard(
+    product
+  ) {
+
+    const stock =
+      Number(
+        product.stock || 0
+      );
+
+
+    let stockClass =
+      "good";
+
+
+    let stockText =
+      `Stock: ${stock} ${product.unit || ""}`;
+
+
+    if (stock <= 0) {
+
+      stockClass =
+        "out";
+
+
+      stockText =
+        "Stock শেষ";
+
+    } else if (stock <= 10) {
+
+      stockClass =
+        "low";
+
+
+      stockText =
+        `Low Stock: ${stock} ${product.unit || ""}`;
+
+    }
+
+
+    let image =
+      product.image_url;
+
+
+    if (!image) {
+
+      image =
+        "https://via.placeholder.com/400x250?text=Product";
+
+    } else if (
+      !image.startsWith("http")
+    ) {
+
+      image =
+        API_BASE +
+        "/" +
+        image.replace(
+          /^\/+/,
+          ""
+        );
+
+    }
+
+
+    return `
+
+      <div class="product-card">
+
+        <img
+          class="product-image"
+          src="${escapeHtml(image)}"
+          alt="${escapeHtml(product.name)}"
+          onerror="
+            this.src='https://via.placeholder.com/400x250?text=Product'
+          "
+        >
+
+        <div class="product-info">
+
+          <div class="product-name">
+            ${escapeHtml(
+              product.name
+            )}
+          </div>
+
+
+          <div class="product-price">
+            ৳${Number(
+              product.selling_price || 0
+            ).toFixed(2)}
+          </div>
+
+
+          <div class="product-unit">
+            প্রতি ${escapeHtml(
+              product.unit || "unit"
+            )}
+          </div>
+
+
+          <div
+            class="stock ${stockClass}"
+          >
+            ${escapeHtml(stockText)}
+          </div>
+
+
+          <button
+            class="add-cart"
+            ${
+              stock <= 0
+                ? "disabled"
+                : ""
+            }
+            onclick="
+              addToCart(${Number(product.id)})
+            "
+          >
+            ${
+              stock <= 0
+                ? "Stock শেষ"
+                : "🛒 Cart-এ যোগ করুন"
+            }
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* =========================
+     ADD TO CART
+  ========================== */
+
+  function addToCart(
+    productId
+  ) {
+
+    const product =
+      products.find(
+        p =>
+          Number(p.id) ===
+          Number(productId)
+      );
+
+
+    if (!product) {
+
+      showToast(
+        "পণ্য পাওয়া যায়নি",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    const stock =
+      Number(
+        product.stock || 0
+      );
+
+
+    if (stock <= 0) {
+
+      showToast(
+        "এই পণ্যের Stock শেষ",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    const existing =
+      cart.find(
+        item =>
+          Number(
+            item.product_id
+          ) ===
+          Number(productId)
+      );
+
+
+    if (existing) {
+
+      if (
+        existing.quantity >=
+        stock
+      ) {
+
+        showToast(
+          "Stock-এর বেশি নেওয়া যাবে না",
+          true
+        );
+
+
+        return;
+
+      }
+
+
+      existing.quantity++;
+
+    } else {
+
+      cart.push({
+
+        product_id:
+          Number(product.id),
+
+        name:
+          product.name,
+
+        selling_price:
+          Number(
+            product.selling_price || 0
+          ),
+
+        unit:
+          product.unit,
+
+        stock:
+          stock,
+
+        quantity:
+          1
+
+      });
+
+    }
+
+
+    saveCart();
+
+
+    showToast(
+      "পণ্য Cart-এ যোগ হয়েছে"
+    );
+
+  }
+
+
+  /* =========================
+     CART STORAGE
+  ========================== */
+
+  function saveCart() {
+
+    localStorage.setItem(
+      "employee_cart",
+      JSON.stringify(cart)
+    );
+
+
+    updateCartCount();
+
+
+    const cartPage =
+      document.getElementById(
+        "cartPage"
+      );
+
+
+    if (
+      cartPage &&
+      cartPage.classList.contains("active")
+    ) {
+
+      renderCart();
+
+    }
+
+  }
+
+
+  function loadCart() {
+
+    try {
+
+      cart =
+        JSON.parse(
+          localStorage.getItem(
+            "employee_cart"
+          )
+        ) || [];
+
+    } catch {
+
+      cart = [];
+
+    }
+
+
+    updateCartCount();
+
+  }
+
+
+  function updateCartCount() {
+
+    const count =
+      cart.reduce(
+        (
+          total,
+          item
+        ) =>
+          total +
+          Number(
+            item.quantity || 0
+          ),
+        0
+      );
+
+
+    const countElement =
+      document.getElementById(
+        "menuCartCount"
+      );
+
+
+    if (countElement) {
+
+      countElement.textContent =
+        `(${count})`;
+
+    }
+
+  }
+
+
+  /* =========================
+     RENDER CART
+  ========================== */
+
+  function renderCart() {
+
+    const container =
+      document.getElementById(
+        "cartContainer"
+      );
+
+
+    if (!container) {
+      return;
+    }
+
+
+    if (
+      cart.length === 0
+    ) {
+
+      container.innerHTML = `
+        <div class="empty">
+
+          <div class="empty-icon">
+            🛍️
+          </div>
+
+          Cart খালি।
+
+          <br><br>
+
+          <button
+            class="primary-btn"
+            onclick="goShopping()"
+          >
+            বাজার শুরু করুন
+          </button>
+
+        </div>
+      `;
+
+
+      return;
+
+    }
+
+
+    let subtotal = 0;
+
+
+    const itemsHtml =
+      cart
+        .map(
+          item => {
+
+            const itemTotal =
+              Number(
+                item.selling_price
+              ) *
+              Number(
+                item.quantity
+              );
+
+
+            subtotal +=
+              itemTotal;
+
+
+            return `
+
+              <div class="cart-item">
+
+                <div>
+
+                  <div class="cart-item-name">
+                    ${escapeHtml(
+                      item.name
+                    )}
+                  </div>
+
+                  <div>
+                    ৳${Number(
+                      item.selling_price
+                    ).toFixed(2)}
+                    ×
+                    ${item.quantity}
+                  </div>
+
+                </div>
+
+
+                <div class="quantity-controls">
+
+                  <button
+                    onclick="
+                      changeQuantity(
+                        ${Number(item.product_id)},
+                        -1
+                      )
+                    "
+                  >
+                    −
+                  </button>
+
+
+                  <strong>
+                    ${Number(item.quantity)}
+                  </strong>
+
+
+                  <button
+                    onclick="
+                      changeQuantity(
+                        ${Number(item.product_id)},
+                        1
+                      )
+                    "
+                  >
+                    +
+                  </button>
+
+                </div>
+
+
+                <strong>
+                  ৳${itemTotal.toFixed(2)}
+                </strong>
+
+
+                <button
+                  class="remove-cart"
+                  onclick="
+                    removeFromCart(
+                      ${Number(item.product_id)}
+                    )
+                  "
+                >
+                  Remove
+                </button>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("");
+
+
+    container.innerHTML = `
+
+      ${itemsHtml}
+
+
+      <div class="cart-total">
+
+        Subtotal:
+        ৳${subtotal.toFixed(2)}
+
+        <br>
+
+
+        <button
+          class="primary-btn"
+          onclick="openCustomerPage()"
+        >
+          পরবর্তী ধাপ →
+        </button>
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* =========================
+     CHANGE QUANTITY
+  ========================== */
+
+  function changeQuantity(
+    productId,
+    amount
+  ) {
+
+    const item =
+      cart.find(
+        item =>
+          Number(
+            item.product_id
+          ) ===
+          Number(productId)
+      );
+
+
+    if (!item) {
+      return;
+    }
+
+
+    const newQuantity =
+      Number(
+        item.quantity
+      ) +
+      Number(amount);
+
+
+    if (
+      newQuantity <= 0
+    ) {
+
+      removeFromCart(
+        productId
+      );
+
+
+      return;
+
+    }
+
+
+    if (
+      newQuantity >
+      Number(item.stock)
+    ) {
+
+      showToast(
+        "Stock-এর বেশি নেওয়া যাবে না",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    item.quantity =
+      newQuantity;
+
+
+    saveCart();
+
+  }
+
+
+  /* =========================
+     REMOVE CART
+  ========================== */
+
+  function removeFromCart(
+    productId
+  ) {
+
+    cart =
+      cart.filter(
+        item =>
+          Number(
+            item.product_id
+          ) !==
+          Number(productId)
+      );
+
+
+    saveCart();
+
+  }
+
+
+  /* =========================
+     OPEN CUSTOMER PAGE
+  ========================== */
+
+  function openCustomerPage() {
+
+    if (
+      cart.length === 0
+    ) {
+
+      showToast(
+        "Cart খালি",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    showPage(
+      "customerPage"
+    );
+
+
+    updateCheckoutTotal();
+
+  }
+
+
+  /* =========================
+     CHECKOUT TOTAL
+  ========================== */
+
+  function updateCheckoutTotal() {
+
+    const subtotal =
+      cart.reduce(
+        (
+          total,
+          item
+        ) =>
+          total +
+          Number(
+            item.selling_price
+          ) *
+          Number(
+            item.quantity
+          ),
+        0
+      );
+
+
+    const delivery =
+      Number(
+        document.getElementById(
+          "deliveryCharge"
+        )?.value || 0
+      );
+
+
+    const total =
+      subtotal +
+      delivery;
+
+
+    const totalElement =
+      document.getElementById(
+        "checkoutTotal"
+      );
+
+
+    if (totalElement) {
+
+      totalElement.textContent =
+        "মোট: ৳" +
+        total.toFixed(2);
+
+    }
+
+  }
+
+
+  document.addEventListener(
+    "input",
+    function(event) {
+
+      if (
+        event.target.id ===
+        "deliveryCharge"
+      ) {
+
+        updateCheckoutTotal();
+
+      }
+
+    }
+  );
+
+
+  /* =========================
+     CUSTOMER SEARCH
+  ========================== */
+
+  async function searchCustomer() {
+
+    const phone =
+      document.getElementById(
+        "customerPhone"
+      ).value.trim();
+
+
+    if (!phone) {
+
+      showToast(
+        "কাস্টমারের ফোন নম্বর দিন",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/api/employee-shopping/customer?phone=" +
+          encodeURIComponent(
+            phone
+          ),
+          {
+            headers:
+              authHeaders()
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      const found =
+        document.getElementById(
+          "customerFound"
+        );
+
+
+      const notFound =
+        document.getElementById(
+          "customerNotFound"
+        );
+
+
+      if (
+        data.found &&
+        data.customer
+      ) {
+
+        document.getElementById(
+          "customerName"
+        ).value =
+          data.customer.name ||
+          "";
+
+
+        document.getElementById(
+          "customerAddress"
+        ).value =
+          data.customer.address ||
+          "";
+
+
+        found.style.display =
+          "block";
+
+
+        notFound.style.display =
+          "none";
+
+
+        showToast(
+          "কাস্টমার পাওয়া গেছে"
+        );
+
+      } else {
+
+        found.style.display =
+          "none";
+
+
+        notFound.style.display =
+          "block";
+
+
+        document.getElementById(
+          "customerName"
+        ).value = "";
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+
+      showToast(
+        "Customer search failed",
+        true
+      );
+
+    }
+
+  }
+
+
+  /* =========================
+     PLACE CUSTOMER ORDER
+  ========================== */
+
+  async function placeCustomerOrder(
+    button
+  ) {
+
+    if (
+      cart.length === 0
+    ) {
+
+      showToast(
+        "Cart খালি",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    const customerPhone =
+      document.getElementById(
+        "customerPhone"
+      ).value.trim();
+
+
+    const customerName =
+      document.getElementById(
+        "customerName"
+      ).value.trim();
+
+
+    const deliveryAddress =
+      document.getElementById(
+        "customerAddress"
+      ).value.trim();
+
+
+    const deliveryCharge =
+      Number(
+        document.getElementById(
+          "deliveryCharge"
+        ).value || 0
+      );
+
+
+    const paymentMethod =
+      document.getElementById(
+        "paymentMethod"
+      ).value;
+
+
+    if (!customerPhone) {
+
+      showToast(
+        "কাস্টমারের ফোন নম্বর দিন",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    if (!customerName) {
+
+      showToast(
+        "কাস্টমারের নাম দিন",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    if (!deliveryAddress) {
+
+      showToast(
+        "কাস্টমারের ঠিকানা দিন",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    if (
+      deliveryCharge < 0
+    ) {
+
+      showToast(
+        "Invalid delivery charge",
+        true
+      );
+
+
+      return;
+
+    }
+
+
+    const items =
+      cart.map(
+        item => ({
+
+          product_id:
+            Number(item.product_id),
+
+          quantity:
+            Number(item.quantity)
+
+        })
+      );
+
+
+    try {
+
+      if (button) {
+
+        button.disabled =
+          true;
+
+
+        button.textContent =
+          "Order তৈরি হচ্ছে...";
+
+      }
+
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/api/employee-shopping/orders",
+          {
+
+            method:
+              "POST",
+
+            headers:
+              authHeaders(),
+
+            body:
+              JSON.stringify({
+
+                items,
+
+                customer_name:
+                  customerName,
+
+                customer_phone:
+                  customerPhone,
+
+                delivery_address:
+                  deliveryAddress,
+
+                delivery_charge:
+                  deliveryCharge,
+
+                payment_method:
+                  paymentMethod
+
+              })
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Order creation failed"
+        );
+
+      }
+
+
+      showToast(
+        "কাস্টমার অর্ডার সফলভাবে তৈরি হয়েছে"
+      );
+
+
+      cart = [];
+
+
+      saveCart();
+
+
+      document.getElementById(
+        "customerPhone"
+      ).value = "";
+
+
+      document.getElementById(
+        "customerName"
+      ).value = "";
+
+
+      document.getElementById(
+        "customerAddress"
+      ).value = "";
+
+
+      document.getElementById(
+        "deliveryCharge"
+      ).value = "0";
+
+
+      document.getElementById(
+        "paymentMethod"
+      ).value =
+        "cash_on_delivery";
+
+
+      updateCheckoutTotal();
+
+
+      /* Refresh product stock */
+
+      await loadProducts();
+
+
+      setTimeout(
+        () => {
+
+          showPage(
+            "ordersPage"
+          );
+
+
+          loadOrders();
+
+        },
+        700
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+
+      showToast(
+        error.message,
+        true
+      );
+
+    } finally {
+
+      if (button) {
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          "✅ অর্ডার Confirm করুন";
+
+      }
+
+    }
+
+  }
+
+
+  /* =========================
+     LOAD ORDERS
+  ========================== */
+
+  async function loadOrders() {
+
+    const container =
+      document.getElementById(
+        "ordersContainer"
+      );
+
+
+    container.innerHTML = `
+      <div class="empty">
+        ⏳ Orders Loading...
+      </div>
+    `;
+
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/api/employee-shopping/orders",
+          {
+            headers:
+              authHeaders()
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Orders load failed"
+        );
+
+      }
+
+
+      const orders =
+        data.orders || [];
+
+
+      if (
+        orders.length === 0
+      ) {
+
+        container.innerHTML = `
+          <div class="empty">
+
+            <div class="empty-icon">
+              📦
+            </div>
+
+            এখনো কোনো অর্ডার নেই।
+
+          </div>
+        `;
+
+
+        return;
+
+      }
+
+
+      container.innerHTML =
+        orders
+          .map(
+            order => {
+
+              const date =
+                order.created_at
+                  ? new Date(
+                      order.created_at
+                    ).toLocaleString(
+                      "bn-BD"
+                    )
+                  : "-";
+
+
+              return `
+
+                <div class="order-card">
+
+                  <div class="order-top">
+
+                    <div class="order-id">
+                      Order #${Number(order.id)}
+                    </div>
+
+
+                    <span class="order-status">
+                      ${escapeHtml(
+                        order.order_status ||
+                        "-"
+                      )}
+                    </span>
+
+                  </div>
+
+
+                  <div class="order-info">
+
+                    👤 Customer:
+                    ${escapeHtml(
+                      order.customer_name ||
+                      "Customer"
+                    )}
+
+                    <br>
+
+                    📞 Phone:
+                    ${escapeHtml(
+                      order.customer_phone ||
+                      "-"
+                    )}
+
+                    <br>
+
+                    💰 Total:
+                    ৳${Number(
+                      order.total_amount || 0
+                    ).toFixed(2)}
+
+                    <br>
+
+                    💳 Payment:
+                    ${escapeHtml(
+                      order.payment_method ||
+                      "-"
+                    )}
+
+                    <br>
+
+                    📅 Date:
+                    ${escapeHtml(date)}
+
+                  </div>
+
+                </div>
+
+              `;
+
+            }
+          )
+          .join("");
+
+
+    } catch (error) {
+
+      console.error(error);
+
+
+      container.innerHTML = `
+        <div class="empty">
+          ❌ ${escapeHtml(error.message)}
+        </div>
+      `;
+
+    }
+
+  }
+
+
+  /* =========================
+     SALES SUMMARY
+  ========================== */
+
+  async function loadSalesSummary() {
+
+    try {
+
+      const response =
+        await fetch(
+          API_BASE +
+          "/api/employee-shopping/sales-summary",
+          {
+            headers:
+              authHeaders()
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          "Sales summary failed"
+        );
+
+      }
+
+
+      const totalOrders =
+        Number(
+          data.total_orders || 0
+        );
+
+
+      const totalSales =
+        Number(
+          data.total_sales || 0
+        );
+
+
+      const totalProfit =
+        Number(
+          data.total_profit || 0
+        );
+
+
+      const commissionRate =
+        Number(
+          data.commission_percent || 0
+        );
+
+
+      const commissionAmount =
+        Number(
+          data.commission_amount || 0
+        );
+
+
+      document.getElementById(
+        "dashboardSales"
+      ).textContent =
+        "৳" +
+        totalSales.toFixed(2);
+
+
+      document.getElementById(
+        "dashboardProfit"
+      ).textContent =
+        "৳" +
+        totalProfit.toFixed(2);
+
+
+      document.getElementById(
+        "dashboardCommissionRate"
+      ).textContent =
+        commissionRate +
+        "%";
+
+
+      document.getElementById(
+        "dashboardCommission"
+      ).textContent =
+        "৳" +
+        commissionAmount.toFixed(2);
+
+
+      document.getElementById(
+        "salesOrders"
+      ).textContent =
+        totalOrders;
+
+
+      document.getElementById(
+        "salesTotal"
+      ).textContent =
+        "৳" +
+        totalSales.toFixed(2);
+
+
+      document.getElementById(
+        "salesProfit"
+      ).textContent =
+        "৳" +
+        totalProfit.toFixed(2);
+
+
+      document.getElementById(
+        "salesCommissionRate"
+      ).textContent =
+        commissionRate +
+        "%";
+
+
+      document.getElementById(
+        "salesCommission"
+      ).textContent =
+        "৳" +
+        commissionAmount.toFixed(2);
+
+    } catch (error) {
+
+      console.error(error);
+
+
+      showToast(
+        "Sales summary load করা যায়নি",
+        true
+      );
+
+    }
+
+  }
+
+
+  /* =========================
+     ESCAPE HTML
+  ========================== */
+
+  function escapeHtml(
+    value
+  ) {
+
+    return String(
+      value ?? ""
+    )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  /* =========================
+     LOGOUT
+  ========================== */
+
+  function logout() {
+
+    localStorage.removeItem(
+      "employee_token"
+    );
+
+
+    localStorage.removeItem(
+      "employee"
+    );
+
+
+    localStorage.removeItem(
+      "employee_cart"
+    );
+
+
+    window.location.href =
+      "/employee-login";
+
+  }
+
+
+  /* =========================
+     INITIALIZE
+  ========================== */
+
+  loadEmployeeInfo();
+
+  loadCart();
+
+  loadProducts();
+
+  loadSalesSummary();
+
+</script>
+
+</body>
+</html>
